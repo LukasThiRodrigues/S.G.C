@@ -87,29 +87,70 @@ Esta seção apresenta uma descrição detalhada da proposta, incluindo os requi
 
 ### 3.2. Considerações de Design
 
-- Discussão sobre as escolhas de design, incluindo alternativas consideradas e justificativas para as decisões tomadas.
-- **Visão Inicial da Arquitetura**: Descrição dos componentes principais e suas interconexões.
-- **Padrões de Arquitetura**: Indicação de padrões específicos utilizados (ex.: MVC, Microserviços).
-- **Modelos C4**: Detalhamento da arquitetura em níveis: Contexto, Contêineres, Componentes, Código.
+- **Visão Inicial da Arquitetura**: A arquitetura será dividida em camadas: apresentação, lógica de aplicação e dados. As comunicações entre cliente e servidor ocorrerão por meio de API REST.
+- **Padrões de Arquitetura**: Será adotado o padrão MVC (Model-View-Controller), separando claramente as responsabilidades entre dados, regras de negócio e interface.
+- **Modelos C4**:
+  - Nível de Contexto: Representa o sistema no ecossistema da empresa, interagindo com usuários e sistemas externos (ex.: ERP).
+
+  - Nível de Contêineres: Divide o sistema em frontend (Angular), backend (Node.js) e banco de dados (MySQL).
+
+  - Nível de Componentes: Mostra os módulos internos como módulo de cotações, módulo de pedidos, módulo de fornecedores e módulo de autenticação.
+
+  - Nível de Código: Organizado em pastas com controllers, services, models e routes.
 
 ### 3.3. Stack Tecnológica
 
-- **Linguagens de Programação**: Justificativa para a escolha de linguagens específicas.
-- **Frameworks e Bibliotecas**: Frameworks e bibliotecas a serem utilizados.
-- **Ferramentas de Desenvolvimento e Gestão de Projeto**: Ferramentas para desenvolvimento e gestão do projeto.
-... qualquer outra informação referente a stack tecnológica ...
+- **Linguagens de Programação**: JavaScript/TypeScript: Utilizados no frontend e backend pela sinergia com Angular e Node.js, além da popularidade e suporte da comunidade.
+- **Frameworks e Bibliotecas**:
+  - Angular: Para a construção de uma interface de usuário moderna e responsiva.
+
+  - Express.js: Framework minimalista e eficiente para desenvolvimento de APIs no Node.js.
+
+  - TypeORM: ORM para manipulação do banco de dados relacional.
+- **Ferramentas de Desenvolvimento e Gestão de Projeto**:
+  - Figma: Protótipos da interface.
+
+  - Git e GitHub: Controle de versão.
+
+  - Jira: Planejamento e acompanhamento das tarefas.
+
+  - Postman: Testes de APIs.
+
+  - Docker: Contêineres para facilitar o deploy e padronização do ambiente.
 
 ### 3.4. Considerações de Segurança
 
-Análise de possíveis questões de segurança e como mitigá-las.
+- Criptografia de Dados Sensíveis: Será aplicada criptografia a senhas e dados críticos utilizando bcrypt e HTTPS.
+
+- Autenticação: Implementação de autenticação com JWT.
+
+- Validação de Entrada: Uso de validação e sanitização de dados de entrada para evitar injeções de SQL e XSS.
+
+- Monitoramento e Logs: Inclusão de sistema de auditoria e rastreamento de atividades suspeitas.
 
 ## 4. Próximos Passos
 
-Descrição dos passos seguintes após a conclusão do documento, com uma visão geral do cronograma para Portfólio I e II.
+- Finalização do protótipo no Figma.
+
+- Implementação inicial do backend com autenticação básica.
+
+- Desenvolvimento da interface principal.
+
+- Integração entre frontend e backend.
+
+- Testes manuais e unitários.
+
+- Expansão de funcionalidades e testes mais robustos.
 
 ## 5. Referências
 
-Listagem de todas as fontes de pesquisa, frameworks, bibliotecas e ferramentas que serão utilizadas.
+- Documentações oficiais do Node.js, Angular, Express.
+
+- Repositórios de bibliotecas no GitHub.
+
+- Artigos e tutoriais técnicos da MDN Web Docs.
+
+- Stack Overflow para resolução de dúvidas práticas.
 
 ## 6. Apêndices (Opcionais)
 
