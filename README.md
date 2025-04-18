@@ -83,7 +83,10 @@ Esta seção apresenta uma descrição detalhada da proposta, incluindo os requi
     - O sistema deve possuir logs para monitoramento e auditoria de ações.
 
  
-- **Representação dos Requisitos:** Representar os RFs por meio de um Diagrama de Casos de Uso (UML).
+- **Representação dos Requisitos:**
+  
+    ![image](https://github.com/user-attachments/assets/f4b4d37e-ba9c-4151-8fec-29ff42ddac4b)
+
 
 ### 3.2. Considerações de Design
 
@@ -152,12 +155,8 @@ Esta seção apresenta uma descrição detalhada da proposta, incluindo os requi
 
 - Stack Overflow para resolução de dúvidas práticas.
 
-## 6. Apêndices (Opcionais)
+## 6. Avaliações de Professores
 
-Informações complementares, dados de suporte ou discussões detalhadas fora do corpo principal.
-## 7. Avaliações de Professores
-
-Adicionar três páginas no final do RFC para que os Professores escolhidos possam fazer suas considerações e assinatura:
 - Considerações Professor/a:
 - Considerações Professor/a:
 - Considerações Professor/a:
