@@ -7,12 +7,12 @@
 
 # Resumo
 
-Este documento apresenta as informações e especificações do S.G.C, incluindo seus requisitos, objetivos e um protótipo desenvolvido no Figma.
+O Sistema de Gestão de Compras (S.G.C) é uma plataforma voltada para empresas que desejam gerenciar o processo de aquisição de produtos junto a fornecedores.
+O sistema foi idealizado para centralizar etapas da gestão de compras, como o cadastro de fornecedores e produtos, a solicitação de cotações, a comparação de propostas e o gerenciamento dos pedidos realizados.
 
-O propósito desse projeto é otimizar o processo de aquisição de produtos por empresas, facilitando a gestão de compras e a interação com fornecedores.
-A plataforma oferecerá funcionalidades como solicitação de cotações, comparação de propostas e gestão de pedidos, proporcionando maior controle e transparência nas transações comerciais.
+Através de uma interface intuitiva e recursos integrados, o S.G.C permite que empresas ganhem maior controle sobre suas compras, aumentem a transparência nas negociações com fornecedores e tomem decisões com base em dados históricos. Fornecedores, por sua vez, podem responder diretamente às solicitações de cotação e pedidos recebidos, promovendo uma comunicação mais ágil e eficaz.
 
-Espera-se que a solução reduza custos operacionais, melhore a previsibilidade de gastos e aumente a eficiência na tomada de decisão.
+Com a adoção do sistema, espera-se uma significativa redução de custos operacionais, melhor organização das informações e maior eficiência no processo de decisão relacionado às aquisições empresariais.
 
 ## 1. Introdução
 
@@ -25,9 +25,7 @@ Espera-se que a solução reduza custos operacionais, melhore a previsibilidade 
 
   - Centralizar informações e histórico de compras.
 
-  - Automatizar processos manuais de aprovação de compras.
-
-  - Reduzir custos e desperdícios na aquisição de produtos.
+  - Workflow de aprovações de pedidos e cotações.
 
 ## 2. Descrição do Projeto
 
@@ -42,12 +40,10 @@ Espera-se que a solução reduza custos operacionais, melhore a previsibilidade 
   - Falta de controle sobre os custos e previsibilidade de gastos.
 
   - Ausência de um sistema para acompanhamento de pedidos.
-- **Limitações**: Algumas das limitações que serão enfrentadas:
-  - O projeto não abrangerá aspectos relacionados à logística e à entrega dos produtos adquiridos.
+- **Limitações**: O projeto não abrangerá:
+  - Aspectos relacionados à logística e à entrega dos produtos adquiridos.
 
-  - A solução não incluirá funcionalidades para pagamento e faturamento.
-
-  - Inicialmente, a plataforma será voltada para pequenas e médias empresas, podendo ser expandida no futuro.
+  - Funcionalidades para pagamento e faturamento.
 
 ## 3. Especificação Técnica
 
