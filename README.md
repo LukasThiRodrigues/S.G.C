@@ -68,8 +68,6 @@ Esta seção apresenta uma descrição detalhada da proposta, incluindo os requi
 
     - Deve oferecer relatórios sobre histórico de compras e cotações realizadas.
 
-    - Utilizará um banco de dados relacional para armazenar informações de fornecedores, cotações, pedidos e usuários.
-
   - Requisitos Não-Funcionais (RNF):
 
     - O sistema deve garantir alta disponibilidade e escalabilidade.
@@ -81,6 +79,8 @@ Esta seção apresenta uma descrição detalhada da proposta, incluindo os requi
     - O tempo de resposta para consultas deve ser inferior a 2 segundos.
 
     - O sistema deve possuir logs para monitoramento e auditoria de ações.
+    
+    - Utilizará um banco de dados relacional para armazenar informações de fornecedores, cotações, pedidos e usuários.
 
  
 - **Representação dos Requisitos:**
