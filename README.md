@@ -88,14 +88,10 @@ Esta seção apresenta uma descrição detalhada da proposta, incluindo os requi
 
 - **Visão Inicial da Arquitetura**: A arquitetura será dividida em camadas: apresentação, lógica de aplicação e dados. As comunicações entre cliente e servidor ocorrerão por meio de API REST.
 - **Padrões de Arquitetura**: Será adotado o padrão MVC (Model-View-Controller), separando claramente as responsabilidades entre dados, regras de negócio e interface.
-- **Modelos C4**:
-  - Nível de Contexto: Representa o sistema no ecossistema da empresa, interagindo com usuários e sistemas externos (ex.: ERP).
+- **Modelo C4**:
+  
+    ![image](https://github.com/user-attachments/assets/3a318119-4461-4eef-b3c8-581127a1dc65)
 
-  - Nível de Contêineres: Divide o sistema em frontend (Angular), backend (Node.js) e banco de dados (MySQL).
-
-  - Nível de Componentes: Mostra os módulos internos como módulo de cotações, módulo de pedidos, módulo de fornecedores e módulo de autenticação.
-
-  - Nível de Código: Organizado em pastas com controllers, services, models e routes.
 
 ### 3.3. Stack Tecnológica
 
