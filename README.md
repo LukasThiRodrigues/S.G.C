@@ -16,20 +16,39 @@ Com a adoção do sistema, espera-se uma significativa redução de custos opera
 
 ## 1. Introdução
 
-- **Contexto**: Atualmente, muitas empresas enfrentam desafios na gestão de compras, como dificuldades na comparação de preços e condições entre diferentes fornecedores, a falta de um histórico estruturado de compras e processos burocráticos manuais que impactam a eficiência operacional.
-- **Justificativa**: A implantação de uma plataforma de gestão de compras é fundamental para empresas que buscam maior eficiência e transparência em seus processos de aquisição. Com isso, é possível reduzir erros e tomar decisões baseadas em dados concretos, alinhando-se às melhores práticas de mercado.
-- **Objetivos**: O principal objetivo deste projeto é desenvolver um sistema que facilite a gestão de compras e forneça meios eficientes para a tomada de decisão ao selecionar fornecedores.
+- **Contexto**: Atualmente, muitas empresas enfrentam desafios significativos na gestão de compras, afetando diretamente a eficiência, os custos e a tomada de decisões estratégicas. Entre os principais obstáculos estão:
+
+  - Dificuldades na comparação de preços, prazos e condições comerciais entre diferentes fornecedores;
+
+  - Ausência de um histórico estruturado de compras anteriores, o que prejudica a análise de desempenho de fornecedores e compradores;
+
+  - Processos manuais e burocráticos, como o envio de planilhas por e-mail e aprovações físicas.
+
+  Em um cenário empresarial cada vez mais digital, torna-se essencial contar com ferramentas especializadas que integrem e automatizem o ciclo de compras, promovendo agilidade, controle e assertividade.
+
+  No mercado atual, diversas plataformas já tentam resolver parte desses problemas, como o SAP Ariba, o TOTVS Protheus, Pipefy, entre outros.
+
+  Essas soluções, apesar de consolidadas, frequentemente apresentam barreiras de entrada como custo elevado, baixa usabilidade e uma interfaçe pouco intuitiva. É nesse contexto que o S.G.C se propõe a atuar: entregar uma solução moderna, acessível e intuitiva para as    empresas, com foco em digitalização, usabilidade e integração de recursos como assinatura digital, que agregam segurança jurídica e eliminam o papel nos processos de aprovação.
+
+- **Justificativa**: A implantação de uma plataforma de gestão de compras é essencial para empresas que buscam eficiência, controle e transparência nos processos de aquisição. Com ela, é possível eliminar tarefas manuais, centralizar o histórico de compras e tomar decisões baseadas em dados concretos.
+Além de melhorar a governança e o compliance, a automação permite rastreabilidade das etapas, facilita auditorias e garante maior segurança e agilidade nas aprovações. A plataforma também promove relacionamentos mais eficientes com fornecedores, alinhando a empresa às melhores práticas de mercado e preparando-a para um cenário corporativo cada vez mais digital e competitivo.
+
+- **Objetivos**: Desenvolver uma plataforma digital de gestão de compras que otimize o relacionamento com fornecedores, centralize informações estratégicas e automatize processos de aquisição, fornecendo suporte ágil e eficiente à tomada de decisão.
   Como objetivos secundários, busca-se:
 
-  - Melhorar a organização dos pedidos e cotações.
+  - Melhorar a organização dos pedidos e cotações;
 
-  - Centralizar informações e histórico de compras.
+  - Centralizar informações e histórico de compras;
 
-  - Workflow de aprovações de pedidos e cotações.
+  - Implementar workflow de aprovações de pedidos e cotações;
+ 
+  - Reduzir tempo e erros operacionais;
+ 
+  - Incluir recursos de assinatura digital.
 
 ## 2. Descrição do Projeto
 
-- **Tema do Projeto**: Desenvolvimento de uma plataforma digital para gestão de compras empresariais, permitindo o cadastro de fornecedores, produtos, pedidos e comparação de orçamentos.
+- **Tema do Projeto**: Uma plataforma para gestão de compras empresariais.
 - **Problemas a Resolver**: Os principais problemas que esse sistema irá resolver são:
   - Falta de transparência e dificuldade na comparação de propostas de fornecedores.
 
@@ -63,6 +82,8 @@ Esta seção apresenta uma descrição detalhada da proposta, incluindo os requi
     - O sistema deve permitir a aprovação e registro de pedidos de compra.
 
     - Deve oferecer relatórios sobre histórico de compras e cotações realizadas.
+   
+    - O usuário deve poder realizar a assinatura digital de documentos.
 
   - Requisitos Não-Funcionais (RNF):
 
@@ -77,11 +98,13 @@ Esta seção apresenta uma descrição detalhada da proposta, incluindo os requi
     - O sistema deve possuir logs para monitoramento e auditoria de ações.
     
     - Utilizará um banco de dados relacional para armazenar informações de fornecedores, cotações, pedidos e usuários.
+   
+    - Garantir a autenticidade e integridade dos documentos assinados.
 
  
 - **Representação dos Requisitos:**
   
-    ![image](https://github.com/user-attachments/assets/f4b4d37e-ba9c-4151-8fec-29ff42ddac4b)
+    ![image](https://github.com/user-attachments/assets/a5a41f57-bbd9-4c03-8727-8a7e44ca94d3)
 
 
 ### 3.2. Considerações de Design
