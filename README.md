@@ -123,14 +123,22 @@ Esta seção apresenta uma descrição detalhada da proposta, incluindo os requi
 
 
 
-
 ### 3.2. Considerações de Design
 
 - **Visão Inicial da Arquitetura**: A arquitetura será dividida em camadas: apresentação, lógica de aplicação e dados. As comunicações entre cliente e servidor ocorrerão por meio de API REST.
 - **Padrões de Arquitetura**: Será adotado o padrão MVC (Model-View-Controller), separando claramente as responsabilidades entre dados, regras de negócio e interface.
 - **Modelo C4**:
-  
-    ![image](https://github.com/user-attachments/assets/3a318119-4461-4eef-b3c8-581127a1dc65)
+    - C1 - Contexto:
+      
+      ![image](https://github.com/user-attachments/assets/4df856e4-6bab-457f-935a-18a0406161fd)
+
+    - C2 - Containers:
+      
+      ![image](https://github.com/user-attachments/assets/e20e1697-5678-45ef-ab46-2d628690be8b)
+
+    - C3 - Components:
+      
+      ![image](https://github.com/user-attachments/assets/6742e6a5-a3a8-4469-bcb8-53cb05749d67)
 
 
 ### 3.3. Stack Tecnológica
