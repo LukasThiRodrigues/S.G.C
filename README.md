@@ -10,7 +10,7 @@
 O Sistema de Gestão de Compras (S.G.C) é uma plataforma voltada para empresas que desejam gerenciar o processo de aquisição de produtos junto a fornecedores.
 O sistema foi idealizado para centralizar etapas da gestão de compras, como o cadastro de fornecedores e produtos, a solicitação de cotações, a comparação de propostas e o gerenciamento dos pedidos realizados.
 
-Através de uma interface intuitiva e recursos integrados, o S.G.C permite que empresas ganhem maior controle sobre suas compras, aumentem a transparência nas negociações com fornecedores e tomem decisões com base em dados históricos. Fornecedores, por sua vez, podem responder diretamente às solicitações de cotação e pedidos recebidos, promovendo uma comunicação mais ágil e eficaz.
+Por meio de uma interface intuitiva e recursos integrados, o S.G.C permite que empresas ganhem maior controle sobre suas compras, aumentem a transparência nas negociações com fornecedores e tomem decisões com base em dados históricos. Fornecedores, por sua vez, podem responder diretamente às solicitações de cotação e pedidos recebidos, promovendo uma comunicação mais ágil e eficaz.
 
 Com a adoção do sistema, espera-se uma significativa redução de custos operacionais, melhor organização das informações e maior eficiência no processo de decisão relacionado às aquisições empresariais.
 
@@ -84,10 +84,14 @@ Esta seção apresenta uma descrição detalhada da proposta, incluindo os requi
     - Deve oferecer relatórios sobre histórico de compras e cotações realizadas.
    
     - O usuário deve poder realizar a assinatura digital de documentos.
+   
+    - O sistema deve informar se o pedido foi recebido, bem como a data.
 
   - Requisitos Não-Funcionais (RNF):
 
-    - O sistema deve garantir alta disponibilidade e escalabilidade.
+    - O sistema deve permanecer disponível na maior parte do tempo (alta disponibilidade).
+
+    - O sistema deve manter tempos de resposta adequados mesmo sob alta carga de usuários simultâneos (escalabilidade).
 
     - A interface deve garantir uma experiência interativa e fluida ao usuário.
 
@@ -103,8 +107,21 @@ Esta seção apresenta uma descrição detalhada da proposta, incluindo os requi
 
  
 - **Representação dos Requisitos:**
+
+    Comprador:
+
+    ![image](https://github.com/user-attachments/assets/7bff06fa-ec24-4228-889a-ba852c005b7a)
+
+
+    Fornecedor:
   
-    ![image](https://github.com/user-attachments/assets/a5a41f57-bbd9-4c03-8727-8a7e44ca94d3)
+    ![image](https://github.com/user-attachments/assets/cd7f0317-ae8b-44a1-83ed-bedfd8f5f4a5)
+
+    Visão Geral:
+
+    ![image](https://github.com/user-attachments/assets/985a43ab-b4df-48bd-8a39-a423ee76af1c)
+
+
 
 
 ### 3.2. Considerações de Design
