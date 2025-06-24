@@ -122,6 +122,10 @@ Esta seção apresenta uma descrição detalhada da proposta, incluindo os requi
     ![image](https://github.com/user-attachments/assets/985a43ab-b4df-48bd-8a39-a423ee76af1c)
 
 
+- **Modelo Entidade Relacionamento:**
+  
+    ![image](https://github.com/user-attachments/assets/9d171e6f-42d6-496e-ad8f-f389d02e4b33)
+
 
 ### 3.2. Considerações de Design
 
