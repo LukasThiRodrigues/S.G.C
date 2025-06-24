@@ -138,7 +138,7 @@ Esta seção apresenta uma descrição detalhada da proposta, incluindo os requi
 
     - C3 - Components:
       
-      ![image](https://github.com/user-attachments/assets/6742e6a5-a3a8-4469-bcb8-53cb05749d67)
+      ![image](https://github.com/user-attachments/assets/8a45ca29-b2c3-4871-bbfb-971d8e20e8e5)
 
 
 ### 3.3. Stack Tecnológica
