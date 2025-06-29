@@ -3,7 +3,7 @@
 - **Título do Projeto**: S.G.C (Sistema de Gestão de Compras)
 - **Nome do Estudante**: Lukas Thiago Rodrigues.
 - **Curso**: Engenharia de Software.
-- **Data de Entrega**: .
+- **Data de Entrega**: 10 de julho de 2025.
 
 # Resumo
 
