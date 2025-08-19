@@ -1,70 +1,76 @@
-<div class="login-container">
-  <div class="login-card">
-    <h1 class="login-title">Login</h1>
-    
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
-      <div class="form-group">
-        <label for="email">E-mail</label>
-        <input 
-          type="email" 
-          id="email" 
-          formControlName="email" 
-          placeholder="Digite seu e-mail"
-          [class.is-invalid]="email?.touched && email?.invalid"
-        >
-        @if (email?.touched && email?.invalid) {
-          <div class="error-message">
-            @if (email?.errors?.['required']) {
-              <span>E-mail é obrigatório</span>
-            }
-            @if (email?.errors?.['email']) {
-              <span>Digite um e-mail válido</span>
-            }
-          </div>
-        }
-      </div>
+<div class="login-page">
+  <div class="login-hero">
+    <div class="image-caption">
+      <h3>Gestão de Compras</h3>
+      <p>Controle seu estoque de forma inteligente</p>
+    </div>
+  </div>
 
-      <div class="form-group">
-        <label for="password">Senha</label>
-        <input 
-          type="password" 
-          id="password" 
-          formControlName="password" 
-          placeholder="Digite sua senha"
-          [class.is-invalid]="password?.touched && password?.invalid"
-        >
-        @if (password?.touched && password?.invalid) {
-          <div class="error-message">
-            @if (password?.errors?.['required']) {
-              <span>Senha é obrigatória</span>
-            }
-            @if (password?.errors?.['minlength']) {
-              <span>Senha deve ter pelo menos 6 caracteres</span>
-            }
-          </div>
-        }
-      </div>
-
-      @if (errorMessage) {
-        <div class="error-message server-error">
-          {{ errorMessage }}
+  <div class="login-container">
+    <div class="login-card">
+      <h1 class="login-title">Bem-vindo</h1>
+      
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+        <div class="form-group">
+          <label for="email">E-mail</label>
+          <input 
+            type="email" 
+            id="email" 
+            formControlName="email" 
+            placeholder="seu@email.com"
+            [class.is-invalid]="email?.touched && email?.invalid"
+          >
+          @if (email?.touched && email?.invalid) {
+            <div class="error-message">
+              @if (email?.errors?.['required']) {
+                <span>E-mail é obrigatório</span>
+              }
+              @if (email?.errors?.['email']) {
+                <span>Digite um e-mail válido</span>
+              }
+            </div>
+          }
         </div>
-      }
 
-      <button type="submit" class="login-button" [disabled]="loading || loginForm.invalid">
-        @if (!loading) {
-          <span>Entrar</span>
-        }
-        @if (loading) {
-          <span>Carregando...</span>
-        }
-      </button>
-    </form>
+        <div class="form-group">
+          <label for="password">Senha</label>
+          <input 
+            type="password" 
+            id="password" 
+            formControlName="password" 
+            [class.is-invalid]="password?.touched && password?.invalid"
+          >
+          @if (password?.touched && password?.invalid) {
+            <div class="error-message">
+              @if (password?.errors?.['required']) {
+                <span>Senha é obrigatória</span>
+              }
+              @if (password?.errors?.['minlength']) {
+                <span>Mínimo de 6 caracteres</span>
+              }
+            </div>
+          }
+        </div>
 
-    <div class="login-footer">
-      <a routerLink="/forgot-password" class="forgot-password">Esqueci minha senha</a>
-      <span class="separator">|</span>
-      <a routerLink="/register" class="register-link">Criar uma conta</a>
+        @if (errorMessage) {
+          <div class="error-message server-error">
+            {{ errorMessage }}
+          </div>
+        }
+
+        <button type="submit" class="login-button" [disabled]="loading || loginForm.invalid">
+          @if (loading) {
+            <span class="loading-spinner"></span>
+          }
+          {{ loading ? 'Entrando...' : 'Entrar' }}
+        </button>
+      </form>
+
+      <div class="login-footer">
+        <a routerLink="/forgot-password">Esqueci minha senha</a>
+        <span class="separator">|</span>
+        <a routerLink="/register">Criar conta</a>
+      </div>
     </div>
   </div>
 </div>
