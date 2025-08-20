@@ -1,14 +1,7 @@
 <div class="login-page">
-  <div class="login-hero">
-    <div class="image-caption">
-      <h3>Gestão de Compras</h3>
-      <p>Controle seu estoque de forma inteligente</p>
-    </div>
-  </div>
-
   <div class="login-container">
     <div class="login-card">
-      <h1 class="login-title">Bem-vindo</h1>
+      <h1 class="login-title">Login</h1>
       
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
         <div class="form-group">
@@ -38,6 +31,7 @@
             type="password" 
             id="password" 
             formControlName="password" 
+            placeholder="Digite sua senha"
             [class.is-invalid]="password?.touched && password?.invalid"
           >
           @if (password?.touched && password?.invalid) {
