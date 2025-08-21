@@ -29,7 +29,7 @@ export class LoginComponent {
     });
   }
 
-  onSubmit() {
+  public onSubmit() {
     if (this.loginForm.invalid) return;
 
     this.loading = true;
@@ -40,11 +40,11 @@ export class LoginComponent {
       const { email, password } = this.loginForm.value;
       
       if (email === 'teste@email.com' && password === '123456') {
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/requests']);
       } else {
         this.errorMessage = 'E-mail ou senha incorretos!';
       }
-    }, 1500);
+    }, 500);
   }
 
   get email() {
