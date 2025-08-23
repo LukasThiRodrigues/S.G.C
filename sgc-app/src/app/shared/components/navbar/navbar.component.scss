@@ -1,16 +1,8 @@
-@use "sass:color";
-
 /* Cores */
 $primary-color: #46b438;
 $white: #ffffff;
 $light-gray: #f5f5f5;
 $text-color: #333333;
-
-/* Layout */
-.requests-container {
-  min-height: 100vh;
-  background-color: $light-gray;
-}
 
 /* Navbar (mantém seu estilo) */
 .navbar {
@@ -63,68 +55,6 @@ $text-color: #333333;
   }
 }
 
-/* Conteúdo */
-.requests-content {
-  padding: 30px 20px;
-  max-width: 1400px;
-  margin: 0 auto;
-
-  .header-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-
-    .page-title {
-      color: $text-color;
-      font-size: 28px;
-      margin: 0;
-    }
-  }
-}
-
-/* Tabela */
-.table-container {
-  margin-top: 20px;
-}
-
-.full-width {
-  width: 100%;
-}
-
-.search-container {
-  margin-bottom: 20px;
-  
-  mat-form-field {
-    width: 100%;
-    max-width: 400px;
-  }
-}
-
-/* Badges de status */
-.status-badge {
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 500;
-
-  &.aprovado {
-    background-color: #4caf50;
-    color: white;
-  }
-
-  &.pendente {
-    background-color: #ff9800;
-    color: white;
-  }
-
-  &.rejeitado {
-    background-color: #f44336;
-    color: white;
-  }
-}
-
-/* Responsividade */
 @media (max-width: 768px) {
   .navbar {
     padding: 0 15px;
@@ -136,16 +66,6 @@ $text-color: #333333;
         padding: 4px 8px;
         font-size: 12px;
       }
-    }
-  }
-
-  .requests-content {
-    padding: 20px 15px;
-    
-    .header-actions {
-      flex-direction: column;
-      gap: 15px;
-      align-items: flex-start;
     }
   }
 }

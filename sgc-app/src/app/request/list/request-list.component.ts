@@ -9,16 +9,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-
-export interface Pedido {
-  id: number;
-  numero: string;
-  solicitante: string;
-  departamento: string;
-  dataSolicitacao: Date;
-  status: string;
-  valorTotal: number;
-}
+import { Pedido, StatusPedido } from '../../shared/models/request.model';
+import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 
 @Component({
   selector: 'app-requests',
@@ -34,13 +26,14 @@ export interface Pedido {
     MatCardModule,
     MatFormFieldModule,
     MatLabel,
-    MatInputModule
+    MatInputModule,
+    NavbarComponent
   ],
-  templateUrl: './request-component.html',
-  styleUrls: ['./request-component.scss']
+  templateUrl: './request-list.component.html',
+  styleUrls: ['./request-list.component.scss']
 })
-export class RequestComponent implements OnInit {
-  displayedColumns: string[] = ['numero', 'solicitante', 'departamento', 'dataSolicitacao', 'status', 'valorTotal', 'acoes'];
+export class RequestListComponent implements OnInit {
+  displayedColumns: string[] = ['codigo', 'criador', 'fornecedor', 'dataEmissao', 'status', 'total', 'acoes'];
   dataSource = new MatTableDataSource<Pedido>();
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -50,30 +43,33 @@ export class RequestComponent implements OnInit {
   pedidos: Pedido[] = [
     {
       id: 1,
-      numero: 'PED-2024-001',
-      solicitante: 'João Silva',
-      departamento: 'TI',
-      dataSolicitacao: new Date('2024-01-15'),
-      status: 'Aprovado',
-      valorTotal: 1250.50
+      codigo: '000001',
+      criador: 'João Silva',
+      fornecedor: 'Fornecedor A',
+      itens: [],
+      dataEmissao: new Date('2024-01-15'),
+      status: StatusPedido.Entregue,
+      total: 1250.50
     },
     {
       id: 2,
-      numero: 'PED-2024-002',
-      solicitante: 'Maria Santos',
-      departamento: 'Financeiro',
-      dataSolicitacao: new Date('2024-01-16'),
-      status: 'Pendente',
-      valorTotal: 890.00
+      codigo: '000002',
+      criador: 'Maria Santos',
+      fornecedor: 'Fornecedor B',
+      itens: [],
+      dataEmissao: new Date('2024-01-16'),
+      status: StatusPedido.Pendente,
+      total: 890.00
     },
     {
       id: 3,
-      numero: 'PED-2024-003',
-      solicitante: 'Carlos Oliveira',
-      departamento: 'Compras',
-      dataSolicitacao: new Date('2024-01-17'),
-      status: 'Rejeitado',
-      valorTotal: 2450.75
+      codigo: '000003',
+      criador: 'Carlos Oliveira',
+      fornecedor: 'Fornecedor C',
+      itens: [],
+      dataEmissao: new Date('2024-01-17'),
+      status: StatusPedido.Cancelado,
+      total: 2450.75
     }
   ];
 
@@ -99,7 +95,7 @@ export class RequestComponent implements OnInit {
 
   editarPedido(pedido: Pedido) {
     console.log('Editar pedido:', pedido);
-    // this.router.navigate(['/editar-pedido', pedido.id]);
+    this.router.navigate(['/request/edit/', pedido.id]);
   }
 
   excluirPedido(pedido: Pedido) {
@@ -109,10 +105,7 @@ export class RequestComponent implements OnInit {
 
   novoPedido() {
     console.log('Novo pedido');
-    // this.router.navigate(['/novo-pedido']);
+    this.router.navigate(['/request/edit']);
   }
 
-  logout() {
-    this.router.navigate(['/login']);
-  }
 }
