@@ -75,16 +75,16 @@ export class QuotationListComponent implements OnInit {
 
   constructor(private router: Router) {}
 
-  ngOnInit() {
+  public ngOnInit() {
     this.dataSource.data = this.pedidos;
   }
 
-  ngAfterViewInit() {
+  public ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
-  applyFilter(event: Event) {
+  public applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
@@ -93,18 +93,15 @@ export class QuotationListComponent implements OnInit {
     }
   }
 
-  edit(cotação: Pedido) {
-    console.log('Editar cotação:', cotação);
+  public edit(cotação: Pedido) {
     this.router.navigate(['/quotation/edit/', cotação.id]);
   }
 
-  delete(cotação: Pedido) {
-    console.log('Excluir cotação:', cotação);
+  public delete(cotação: Pedido) {
     // Lógica de exclusão aqui
   }
 
-  create() {
-    console.log('Nova cotação');
+  public create() {
     this.router.navigate(['/quotation/edit']);
   }
 

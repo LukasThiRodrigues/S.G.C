@@ -30,12 +30,12 @@ export class RequestEditComponent implements OnInit {
       if (params['id']) {
         this.isEditMode = true;
         this.pedidoId = +params['id'];
-        this.carregarPedido(this.pedidoId);
+        this.load(this.pedidoId);
       }
     });
   }
 
-  createForm(): FormGroup {
+  private createForm(): FormGroup {
     return this.fb.group({
       codigo: ['', Validators.required],
       dataEmissao: [new Date().toISOString().substring(0, 10), Validators.required],
@@ -47,7 +47,7 @@ export class RequestEditComponent implements OnInit {
     });
   }
 
-  createItemForm(): FormGroup {
+  private createItemForm(): FormGroup {
     return this.fb.group({
       produto: ['', Validators.required],
       unidade: ['', Validators.required],
@@ -61,34 +61,34 @@ export class RequestEditComponent implements OnInit {
     return this.pedidoForm.get('itens') as FormArray;
   }
 
-  adicionarItem() {
+  public addItem() {
     this.itens.push(this.createItemForm());
   }
 
-  removerItem(index: number) {
+  public removeItem(index: number) {
     if (this.itens.length > 1) {
       this.itens.removeAt(index);
-      this.calcularTotal();
+      this.calculateTotal();
     }
   }
 
-  calcularTotalItem(index: number) {
+  public calculateTotalItem(index: number) {
     const item = this.itens.at(index);
     const quantidade = item.get('quantidade')?.value || 0;
     const precoUnitario = item.get('precoUnitario')?.value || 0;
     const total = quantidade * precoUnitario;
     item.patchValue({ total });
-    this.calcularTotal();
+    this.calculateTotal();
   }
 
-  calcularTotal() {
+  private calculateTotal() {
     const total = this.itens.controls.reduce((sum, item) => {
       return sum + (item.get('total')?.value || 0);
     }, 0);
     this.pedidoForm.patchValue({ total });
   }
 
-  carregarPedido(id: number) {
+  private load(id: number) {
     const pedidoMock: Pedido = {
       id: 1,
       codigo: '000001',
@@ -114,14 +114,14 @@ export class RequestEditComponent implements OnInit {
     this.pedidoForm.patchValue(pedidoMock);
   }
 
-  onSubmit() {
+  public onSubmit() {
     if (this.pedidoForm.valid) {
       console.log('Pedido salvo:', this.pedidoForm.value);
       this.router.navigate(['/requests']);
     }
   }
 
-  cancelar() {
+  public cancel() {
     this.router.navigate(['/requests']);
   }
 }

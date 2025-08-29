@@ -75,16 +75,16 @@ export class RequestListComponent implements OnInit {
 
   constructor(private router: Router) {}
 
-  ngOnInit() {
+  public ngOnInit() {
     this.dataSource.data = this.pedidos;
   }
 
-  ngAfterViewInit() {
+  public ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
-  aplicarFiltro(event: Event) {
+  public applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
@@ -93,18 +93,15 @@ export class RequestListComponent implements OnInit {
     }
   }
 
-  editarPedido(pedido: Pedido) {
-    console.log('Editar pedido:', pedido);
+  public edit(pedido: Pedido) {
     this.router.navigate(['/request/edit/', pedido.id]);
   }
 
-  excluirPedido(pedido: Pedido) {
-    console.log('Excluir pedido:', pedido);
+  public delete(pedido: Pedido) {
     // Lógica de exclusão aqui
   }
 
-  novoPedido() {
-    console.log('Novo pedido');
+  public create() {
     this.router.navigate(['/request/edit']);
   }
 

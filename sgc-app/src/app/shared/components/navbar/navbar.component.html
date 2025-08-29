@@ -3,19 +3,19 @@
       <a class="logo">Sistema de Gestão de Compras</a>
       
       <div class="nav-buttons">
-        <button class="nav-button active" routerLink="/requests">
+        <button class="nav-button" (click)="requests()" [class.active]="isActive(['/requests', '/request/edit'])">
           Pedidos
         </button>
-        <button class="nav-button" routerLink="/quotations">
+        <button class="nav-button" (click)="quotations()" [class.active]="isActive(['/quotations', '/quotation/edit'])">
           Cotações
         </button>
-        <button class="nav-button" routerLink="/suppliers">
+        <button class="nav-button" (click)="suppliers()" [class.active]="isActive(['/suppliers', '/supplier/edit'])">
           Fornecedores
         </button>
-        <button class="nav-button" routerLink="/items">
+        <button class="nav-button" (click)="items()" [class.active]="isActive(['/items', '/item/edit'])">
           Itens
         </button>
-        <button class="nav-button" routerLink="/profile">
+        <button class="nav-button" (click)="profile()" [class.active]="isActive(['/profile'])">
           Perfil
         </button>
         <button class="nav-button" (click)="logout()">
