@@ -13,7 +13,7 @@ import { Pedido, StatusPedido } from '../../shared/models/request.model';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 
 @Component({
-  selector: 'app-requests-list',
+  selector: 'app-quotations-list',
   standalone: true,
   imports: [
     CommonModule,
@@ -29,10 +29,10 @@ import { NavbarComponent } from '../../shared/components/navbar/navbar.component
     MatInputModule,
     NavbarComponent
   ],
-  templateUrl: './request-list.component.html',
-  styleUrls: ['./request-list.component.scss']
+  templateUrl: './quotation-list.component.html',
+  styleUrls: ['./quotation-list.component.scss']
 })
-export class RequestListComponent implements OnInit {
+export class QuotationListComponent implements OnInit {
   displayedColumns: string[] = ['codigo', 'criador', 'fornecedor', 'dataEmissao', 'status', 'total', 'acoes'];
   dataSource = new MatTableDataSource<Pedido>();
   
@@ -84,7 +84,7 @@ export class RequestListComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-  aplicarFiltro(event: Event) {
+  applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
@@ -93,19 +93,19 @@ export class RequestListComponent implements OnInit {
     }
   }
 
-  editarPedido(pedido: Pedido) {
-    console.log('Editar pedido:', pedido);
-    this.router.navigate(['/request/edit/', pedido.id]);
+  edit(cotação: Pedido) {
+    console.log('Editar cotação:', cotação);
+    this.router.navigate(['/quotation/edit/', cotação.id]);
   }
 
-  excluirPedido(pedido: Pedido) {
-    console.log('Excluir pedido:', pedido);
+  delete(cotação: Pedido) {
+    console.log('Excluir cotação:', cotação);
     // Lógica de exclusão aqui
   }
 
-  novoPedido() {
-    console.log('Novo pedido');
-    this.router.navigate(['/request/edit']);
+  create() {
+    console.log('Nova cotação');
+    this.router.navigate(['/quotation/edit']);
   }
 
 }
