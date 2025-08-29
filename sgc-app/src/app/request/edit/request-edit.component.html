@@ -1,0 +1,92 @@
+<div class="pedido-container">
+  <app-navbar></app-navbar>
+
+  <div class="pedido-card">
+    <h1 class="pedido-title">
+      {{ isEditMode ? 'Editar Pedido' : 'Novo Pedido' }}
+    </h1>
+
+    <form [formGroup]="pedidoForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Código do Pedido</label>
+          <input type="text" formControlName="codigo" placeholder="Ex: 000001">
+        </div>
+
+        <div class="form-group">
+          <label>Data de Emissão</label>
+          <input type="date" formControlName="dataEmissao">
+        </div>
+
+        <div class="form-group">
+          <label>Data de Entrega</label>
+          <input type="date" formControlName="dataEntrega">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Fornecedor</label>
+          <input type="text" formControlName="fornecedor" placeholder="Nome do fornecedor">
+        </div>
+
+        <div class="form-group">
+          <label>Status</label>
+          <select formControlName="status">
+            <option value="Pendente">Pendente</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="itens-section">
+        <div class="section-header">
+          <h3>Itens do Pedido</h3>
+          <button type="button" class="btn-add" (click)="adicionarItem()">+ Adicionar Item</button>
+        </div>
+
+        <div formArrayName="itens">
+          <div class="item-row" *ngFor="let item of itens.controls; let i = index" [formGroupName]="i">
+            <div class="item-produto">
+              <input type="text" formControlName="produto" placeholder="Nome do produto">
+            </div>
+
+            <div class="item-unidade">
+              <input type="text" formControlName="unidade" placeholder="Unidade">
+            </div>
+
+            <div class="item-quantidade">
+              <input type="number" formControlName="quantidade" min="1" 
+                     (change)="calcularTotalItem(i)" placeholder="Qtd">
+            </div>
+
+            <div class="item-preco">
+              <input type="number" formControlName="precoUnitario" min="0" step="0.01"
+                     (change)="calcularTotalItem(i)" placeholder="R$ 0,00">
+            </div>
+
+            <div class="item-total">
+              R$ {{ item.get('total')?.value | number:'1.2-2' }}
+            </div>
+
+            <div class="item-actions">
+              <button type="button" class="btn-remove" (click)="removerItem(i)" 
+                      [disabled]="itens.length === 1">×</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="total-section">
+        <div class="total-label">Total do Pedido:</div>
+        <div class="total-value">R$ {{ pedidoForm.get('total')?.value | number:'1.2-2' }}</div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-cancelar" (click)="cancelar()">Cancelar</button>
+        <button type="submit" class="btn-salvar" [disabled]="pedidoForm.invalid">
+          {{ isEditMode ? 'Atualizar' : 'Criar' }} Pedido
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

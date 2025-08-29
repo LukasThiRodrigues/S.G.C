@@ -1,0 +1,71 @@
+/* Cores */
+$primary-color: #46b438;
+$white: #ffffff;
+$light-gray: #f5f5f5;
+$text-color: #333333;
+
+/* Navbar (mantém seu estilo) */
+.navbar {
+  background-color: $primary-color;
+  padding: 0 20px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+  .navbar-content {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    color: $white;
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .nav-buttons {
+    display: flex;
+    gap: 10px;
+    
+    .nav-button {
+      background: transparent;
+      border: 2px solid $white;
+      color: $white;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: $white;
+        color: $primary-color;
+      }
+
+      &.active {
+        background-color: $white;
+        color: $primary-color;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0 15px;
+    
+    .nav-buttons {
+      gap: 5px;
+      
+      .nav-button {
+        padding: 4px 8px;
+        font-size: 12px;
+      }
+    }
+  }
+}
