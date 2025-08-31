@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Pedido, StatusPedido } from '../../shared/models/request.model';
+import { Request, StatusRequest } from '../../shared/models/request.model';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -13,35 +13,39 @@ import { NavbarComponent } from '../../shared/components/navbar/navbar.component
   styleUrl: './request-edit.component.scss'
 })
 export class RequestEditComponent implements OnInit {
-  pedidoForm: FormGroup;
+  requestForm: FormGroup;
   isEditMode = false;
-  pedidoId?: number;
+  requestId?: number;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {
-    this.pedidoForm = this.createForm();
+    this.requestForm = this.createForm();
   }
 
   public ngOnInit() {
     this.route.params.subscribe(params => {
       if (params['id']) {
         this.isEditMode = true;
-        this.pedidoId = +params['id'];
-        this.load(this.pedidoId);
+        this.requestId = +params['id'];
+        this.load(this.requestId);
       }
     });
   }
 
   private createForm(): FormGroup {
     return this.fb.group({
-      codigo: ['', Validators.required],
-      dataEmissao: [new Date().toISOString().substring(0, 10), Validators.required],
-      dataEntrega: [''],
-      fornecedor: ['', Validators.required],
-      status: [StatusPedido.Pendente, Validators.required],
+      code: ['', Validators.required],
+      createdAt: [new Date().toISOString().substring(0, 10), Validators.required],
+      description: null,
+      deliveredAt: [''],
+      supplier: this.fb.group({
+        name: ['', Validators.required],
+        cnpj: ['', Validators.required]
+      }),
+      status: [StatusRequest.Pending, Validators.required],
       itens: this.fb.array([this.createItemForm()]),
       total: [0]
     });
@@ -49,16 +53,20 @@ export class RequestEditComponent implements OnInit {
 
   private createItemForm(): FormGroup {
     return this.fb.group({
-      produto: ['', Validators.required],
-      unidade: ['', Validators.required],
-      quantidade: [1, [Validators.required, Validators.min(1)]],
-      precoUnitario: [0, [Validators.required, Validators.min(0)]],
+      item: ['', Validators.required],
+      unit: ['', Validators.required],
+      quantity: [1, [Validators.required, Validators.min(1)]],
+      price: [0, [Validators.required, Validators.min(0)]],
       total: [0]
     });
   }
 
   get itens(): FormArray {
-    return this.pedidoForm.get('itens') as FormArray;
+    return this.requestForm.get('itens') as FormArray;
+  }
+
+  get supplier(): FormGroup {
+    return this.requestForm.get('supplier') as FormGroup;
   }
 
   public addItem() {
@@ -74,9 +82,9 @@ export class RequestEditComponent implements OnInit {
 
   public calculateTotalItem(index: number) {
     const item = this.itens.at(index);
-    const quantidade = item.get('quantidade')?.value || 0;
-    const precoUnitario = item.get('precoUnitario')?.value || 0;
-    const total = quantidade * precoUnitario;
+    const quantity = item.get('quantity')?.value || 0;
+    const price = item.get('price')?.value || 0;
+    const total = quantity * price;
     item.patchValue({ total });
     this.calculateTotal();
   }
@@ -85,20 +93,21 @@ export class RequestEditComponent implements OnInit {
     const total = this.itens.controls.reduce((sum, item) => {
       return sum + (item.get('total')?.value || 0);
     }, 0);
-    this.pedidoForm.patchValue({ total });
+    this.requestForm.patchValue({ total });
   }
 
   private load(id: number) {
-    const pedidoMock: Pedido = {
+    const requestMock: Request = {
       id: 1,
-      codigo: '000001',
-      dataEmissao: new Date(),
-      criador: 'João Silva',
-      fornecedor: 'Fornecedor Exemplo Ltda',
-      status: StatusPedido.Pendente,
+      code: '000001',
+      createdAt: new Date(),
+      creator: 'João Silva',
+      description: 'Pedido de teste',
+      supplier: { id: 1, name: 'Fornecedor A', cnpj: '00.000.000/0001-00' },
+      status: StatusRequest.Pending,
       itens: [
-        { produto: 'Produto A', quantidade: 2, unidade: 'UN', precoUnitario: 100, total: 200 },
-        { produto: 'Produto B', quantidade: 1, unidade: 'UN', precoUnitario: 50, total: 50 }
+        { item: 'Produto A', quantity: 2, unit: 'UN', price: 100, total: 200 },
+        { item: 'Produto B', quantity: 1, unit: 'UN', price: 50, total: 50 }
       ],
       total: 250
     };
@@ -107,16 +116,15 @@ export class RequestEditComponent implements OnInit {
       this.itens.removeAt(0);
     }
 
-    pedidoMock.itens.forEach(item => {
+    requestMock.itens.forEach(item => {
       this.itens.push(this.fb.group(item));
     });
 
-    this.pedidoForm.patchValue(pedidoMock);
+    this.requestForm.patchValue(requestMock);
   }
 
   public onSubmit() {
-    if (this.pedidoForm.valid) {
-      console.log('Pedido salvo:', this.pedidoForm.value);
+    if (this.requestForm.valid) {
       this.router.navigate(['/requests']);
     }
   }

@@ -9,7 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Pedido, StatusPedido } from '../../shared/models/request.model';
+import { Request, StatusRequest } from '../../shared/models/request.model';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 
 @Component({
@@ -33,42 +33,44 @@ import { NavbarComponent } from '../../shared/components/navbar/navbar.component
   styleUrls: ['./request-list.component.scss']
 })
 export class RequestListComponent implements OnInit {
-  displayedColumns: string[] = ['codigo', 'criador', 'fornecedor', 'dataEmissao', 'status', 'total', 'acoes'];
-  dataSource = new MatTableDataSource<Pedido>();
+  displayedColumns: string[] = ['code', 'creator', 'supplier', 'createdAt', 'description', 'status', 'total', 'actions'];
+  dataSource = new MatTableDataSource<Request>();
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  // Dados de exemplo
-  pedidos: Pedido[] = [
+  requests: Request[] = [
     {
       id: 1,
-      codigo: '000001',
-      criador: 'João Silva',
-      fornecedor: 'Fornecedor A',
+      code: '000001',
+      creator: 'João Silva',
+      description: 'Pedido de teste',
+      supplier: { id: 1, name: 'Fornecedor A', cnpj: '00.000.000/0001-00' },
       itens: [],
-      dataEmissao: new Date('2024-01-15'),
-      status: StatusPedido.Entregue,
+      createdAt: new Date('2024-01-15'),
+      status: StatusRequest.Delivered,
       total: 1250.50
     },
     {
       id: 2,
-      codigo: '000002',
-      criador: 'Maria Santos',
-      fornecedor: 'Fornecedor B',
+      code: '000002',
+      creator: 'Maria Santos',
+      description: 'Pedido de teste 2',
+      supplier: { id: 2, name: 'Fornecedor B', cnpj: '00.000.000/0002-00' },
       itens: [],
-      dataEmissao: new Date('2024-01-16'),
-      status: StatusPedido.Pendente,
+      createdAt: new Date('2024-01-16'),
+      status: StatusRequest.Pending,
       total: 890.00
     },
     {
       id: 3,
-      codigo: '000003',
-      criador: 'Carlos Oliveira',
-      fornecedor: 'Fornecedor C',
+      code: '000003',
+      creator: 'Carlos Oliveira',
+      description: 'Pedido de teste 3',
+      supplier: { id: 3, name: 'Fornecedor C', cnpj: '00.000.000/0003-00' },
       itens: [],
-      dataEmissao: new Date('2024-01-17'),
-      status: StatusPedido.Cancelado,
+      createdAt: new Date('2024-01-17'),
+      status: StatusRequest.Canceled,
       total: 2450.75
     }
   ];
@@ -76,7 +78,7 @@ export class RequestListComponent implements OnInit {
   constructor(private router: Router) {}
 
   public ngOnInit() {
-    this.dataSource.data = this.pedidos;
+    this.dataSource.data = this.requests;
   }
 
   public ngAfterViewInit() {
@@ -93,11 +95,11 @@ export class RequestListComponent implements OnInit {
     }
   }
 
-  public edit(pedido: Pedido) {
-    this.router.navigate(['/request/edit/', pedido.id]);
+  public edit(request: Request) {
+    this.router.navigate(['/request/edit/', request.id]);
   }
 
-  public delete(pedido: Pedido) {
+  public delete(request: Request) {
     // Lógica de exclusão aqui
   }
 

@@ -1,7 +1,7 @@
-<div class="requests-container">
+<div class="form-container">
   <app-navbar></app-navbar>
 
-  <div class="requests-content">
+  <div class="form-content">
     <div class="header-actions">
       <h1 class="page-title">Cotações</h1>
       <button mat-raised-button 
@@ -24,47 +24,47 @@
 
         <div class="table-container">
           <table mat-table [dataSource]="dataSource" matSort>
-            <ng-container matColumnDef="codigo">
+            <ng-container matColumnDef="code">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Código</th>
-              <td mat-cell *matCellDef="let pedido">{{pedido.codigo}}</td>
+              <td mat-cell *matCellDef="let quotation">{{quotation.code}}</td>
             </ng-container>
 
-            <ng-container matColumnDef="criador">
+            <ng-container matColumnDef="creator">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Criador</th>
-              <td mat-cell *matCellDef="let pedido">{{pedido.criador}}</td>
+              <td mat-cell *matCellDef="let quotation">{{quotation.creator}}</td>
             </ng-container>
 
-            <ng-container matColumnDef="fornecedor">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Fornecedor</th>
-              <td mat-cell *matCellDef="let pedido">{{pedido.fornecedor}}</td>
+            <ng-container matColumnDef="description">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Descrição</th>
+              <td mat-cell *matCellDef="let quotation">{{quotation.description}}</td>
             </ng-container>
 
-            <ng-container matColumnDef="dataEmissao">
+            <ng-container matColumnDef="createdAt">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Data da Emissão</th>
-              <td mat-cell *matCellDef="let pedido">{{pedido.dataEmissao | date:'dd/MM/yyyy'}}</td>
+              <td mat-cell *matCellDef="let quotation">{{quotation.createdAt | date:'dd/MM/yyyy'}}</td>
             </ng-container>
 
             <ng-container matColumnDef="status">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-              <td mat-cell *matCellDef="let pedido">
-                <span class="status-badge" [class]="pedido.status.toLowerCase()">
-                  {{pedido.status}}
+              <td mat-cell *matCellDef="let quotation">
+                <span class="status-badge" [class]="quotation.status.toLowerCase()">
+                  {{quotation.status}}
                 </span>
               </td>
             </ng-container>
 
             <ng-container matColumnDef="total">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Valor Total</th>
-              <td mat-cell *matCellDef="let pedido">{{pedido.total | currency:'BRL'}}</td>
+              <td mat-cell *matCellDef="let quotation">{{quotation.total | currency:'BRL'}}</td>
             </ng-container>
 
-            <ng-container matColumnDef="acoes">
+            <ng-container matColumnDef="actions">
               <th mat-header-cell *matHeaderCellDef>Ações</th>
-              <td mat-cell *matCellDef="let pedido">
-                <button mat-icon-button color="primary" (click)="edit(pedido)" title="Editar">
+              <td mat-cell *matCellDef="let quotation">
+                <button mat-icon-button color="primary" (click)="edit(quotation)" title="Editar">
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-icon-button color="warn" (click)="delete(pedido)" title="Excluir">
+                <button mat-icon-button color="warn" (click)="delete(quotation)" title="Excluir">
                   <mat-icon>delete</mat-icon>
                 </button>
               </td>

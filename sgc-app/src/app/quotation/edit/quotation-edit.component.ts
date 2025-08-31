@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Pedido, StatusPedido } from '../../shared/models/request.model';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
+import { Quotation, StatusQuotation } from '../../shared/models/quotation.model';
 
 @Component({
   selector: 'app-quotation-edit',
@@ -13,35 +13,35 @@ import { NavbarComponent } from '../../shared/components/navbar/navbar.component
   styleUrl: './quotation-edit.component.scss'
 })
 export class QuotationEditComponent implements OnInit {
-  pedidoForm: FormGroup;
+  quotationForm: FormGroup;
   isEditMode = false;
-  pedidoId?: number;
+  quotationId?: number;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute
   ) {
-    this.pedidoForm = this.createForm();
+    this.quotationForm = this.createForm();
   }
 
   public ngOnInit() {
     this.route.params.subscribe(params => {
       if (params['id']) {
         this.isEditMode = true;
-        this.pedidoId = +params['id'];
-        this.load(this.pedidoId);
+        this.quotationId = +params['id'];
+        this.load(this.quotationId);
       }
     });
   }
 
   private createForm(): FormGroup {
     return this.fb.group({
-      codigo: ['', Validators.required],
-      dataEmissao: [new Date().toISOString().substring(0, 10), Validators.required],
-      dataEntrega: [''],
-      fornecedor: ['', Validators.required],
-      status: [StatusPedido.Pendente, Validators.required],
+      code: ['', Validators.required],
+      createdAt: [new Date().toISOString().substring(0, 10), Validators.required],
+      description: ['', Validators.required],
+      suppliers: this.fb.array([this.createSupplierForm()]),
+      status: [StatusQuotation.Pending, Validators.required],
       itens: this.fb.array([this.createItemForm()]),
       total: [0]
     });
@@ -49,20 +49,35 @@ export class QuotationEditComponent implements OnInit {
 
   private createItemForm(): FormGroup {
     return this.fb.group({
-      produto: ['', Validators.required],
-      unidade: ['', Validators.required],
-      quantidade: [1, [Validators.required, Validators.min(1)]],
-      precoUnitario: [0, [Validators.required, Validators.min(0)]],
+      item: ['', Validators.required],
+      unit: ['', Validators.required],
+      quantity: [1, [Validators.required, Validators.min(1)]],
+      price: [0, [Validators.required, Validators.min(0)]],
       total: [0]
     });
   }
 
+  private createSupplierForm(): FormGroup {
+    return this.fb.group({
+      name: ['', Validators.required],
+      cnpj: ['', Validators.required],
+    });
+  }
+
   get itens(): FormArray {
-    return this.pedidoForm.get('itens') as FormArray;
+    return this.quotationForm.get('itens') as FormArray;
+  }
+
+  get suppliers(): FormArray {
+    return this.quotationForm.get('suppliers') as FormArray;
   }
 
   public addItem() {
     this.itens.push(this.createItemForm());
+  }
+
+  public addSupplier() {
+    this.suppliers.push(this.createSupplierForm());
   }
 
   public removeItem(index: number) {
@@ -72,11 +87,17 @@ export class QuotationEditComponent implements OnInit {
     }
   }
 
+  public removeSupplier(index: number) {
+    if (this.suppliers.length > 1) {
+      this.suppliers.removeAt(index);
+    }
+  }
+
   public calculateTotalItem(index: number) {
     const item = this.itens.at(index);
-    const quantidade = item.get('quantidade')?.value || 0;
-    const precoUnitario = item.get('precoUnitario')?.value || 0;
-    const total = quantidade * precoUnitario;
+    const quantity = item.get('quantity')?.value || 0;
+    const price = item.get('price')?.value || 0;
+    const total = quantity * price;
     item.patchValue({ total });
     this.calculateTotal();
   }
@@ -85,20 +106,24 @@ export class QuotationEditComponent implements OnInit {
     const total = this.itens.controls.reduce((sum, item) => {
       return sum + (item.get('total')?.value || 0);
     }, 0);
-    this.pedidoForm.patchValue({ total });
+    this.quotationForm.patchValue({ total });
   }
 
   private load(id: number) {
-    const pedidoMock: Pedido = {
+    const quotationMock: Quotation = {
       id: 1,
-      codigo: '000001',
-      dataEmissao: new Date(),
-      criador: 'João Silva',
-      fornecedor: 'Fornecedor Exemplo Ltda',
-      status: StatusPedido.Pendente,
+      code: '000001',
+      createdAt: new Date(),
+      creator: 'João Silva',
+      description: 'Descrição da Cotação',
+      suppliers: [
+        { cnpj: '12345678000195', name: 'Fornecedor A' },
+        { cnpj: '98765432000196', name: 'Fornecedor B' }
+      ],
+      status: StatusQuotation.Pending,
       itens: [
-        { produto: 'Produto A', quantidade: 2, unidade: 'UN', precoUnitario: 100, total: 200 },
-        { produto: 'Produto B', quantidade: 1, unidade: 'UN', precoUnitario: 50, total: 50 }
+        { item: 'Produto A', quantity: 2, unit: 'UN', price: 100, total: 200 },
+        { item: 'Produto B', quantity: 1, unit: 'UN', price: 50, total: 50 }
       ],
       total: 250
     };
@@ -107,16 +132,15 @@ export class QuotationEditComponent implements OnInit {
       this.itens.removeAt(0);
     }
 
-    pedidoMock.itens.forEach(item => {
+    quotationMock.itens.forEach(item => {
       this.itens.push(this.fb.group(item));
     });
 
-    this.pedidoForm.patchValue(pedidoMock);
+    this.quotationForm.patchValue(quotationMock);
   }
 
   public onSubmit() {
-    if (this.pedidoForm.valid) {
-      console.log('Pedido salvo:', this.pedidoForm.value);
+    if (this.quotationForm.valid) {
       this.router.navigate(['/quotations']);
     }
   }

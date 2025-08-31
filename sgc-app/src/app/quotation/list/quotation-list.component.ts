@@ -9,8 +9,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Pedido, StatusPedido } from '../../shared/models/request.model';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
+import { Quotation, StatusQuotation } from '../../shared/models/quotation.model';
 
 @Component({
   selector: 'app-quotations-list',
@@ -33,42 +33,44 @@ import { NavbarComponent } from '../../shared/components/navbar/navbar.component
   styleUrls: ['./quotation-list.component.scss']
 })
 export class QuotationListComponent implements OnInit {
-  displayedColumns: string[] = ['codigo', 'criador', 'fornecedor', 'dataEmissao', 'status', 'total', 'acoes'];
-  dataSource = new MatTableDataSource<Pedido>();
+  displayedColumns: string[] = ['code', 'creator', 'description', 'createdAt', 'status', 'total', 'actions'];
+  dataSource = new MatTableDataSource<Quotation>();
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  // Dados de exemplo
-  pedidos: Pedido[] = [
+  quotations: Quotation[] = [
     {
       id: 1,
-      codigo: '000001',
-      criador: 'João Silva',
-      fornecedor: 'Fornecedor A',
+      code: '000001',
+      creator: 'João Silva',
+      description: 'Descrição Cotação 1',
+      suppliers: [],
       itens: [],
-      dataEmissao: new Date('2024-01-15'),
-      status: StatusPedido.Entregue,
+      createdAt: new Date('2024-01-15'),
+      status: StatusQuotation.GeneratedRequest,
       total: 1250.50
     },
     {
       id: 2,
-      codigo: '000002',
-      criador: 'Maria Santos',
-      fornecedor: 'Fornecedor B',
+      code: '000002',
+      creator: 'Maria Santos',
+      description: 'Descrição Cotação 2',
+      suppliers: [],
       itens: [],
-      dataEmissao: new Date('2024-01-16'),
-      status: StatusPedido.Pendente,
+      createdAt: new Date('2024-01-16'),
+      status: StatusQuotation.Pending,
       total: 890.00
     },
     {
       id: 3,
-      codigo: '000003',
-      criador: 'Carlos Oliveira',
-      fornecedor: 'Fornecedor C',
+      code: '000003',
+      creator: 'Carlos Oliveira',
+      description: 'Descrição Cotação 3',
+      suppliers: [],
       itens: [],
-      dataEmissao: new Date('2024-01-17'),
-      status: StatusPedido.Cancelado,
+      createdAt: new Date('2024-01-17'),
+      status: StatusQuotation.InDecision,
       total: 2450.75
     }
   ];
@@ -76,7 +78,7 @@ export class QuotationListComponent implements OnInit {
   constructor(private router: Router) {}
 
   public ngOnInit() {
-    this.dataSource.data = this.pedidos;
+    this.dataSource.data = this.quotations;
   }
 
   public ngAfterViewInit() {
@@ -93,11 +95,11 @@ export class QuotationListComponent implements OnInit {
     }
   }
 
-  public edit(cotação: Pedido) {
-    this.router.navigate(['/quotation/edit/', cotação.id]);
+  public edit(quotation: Quotation) {
+    this.router.navigate(['/quotation/edit/', quotation.id]);
   }
 
-  public delete(cotação: Pedido) {
+  public delete(quotation: Quotation) {
     // Lógica de exclusão aqui
   }
 
