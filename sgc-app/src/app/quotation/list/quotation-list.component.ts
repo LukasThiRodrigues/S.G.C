@@ -9,11 +9,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Request, StatusRequest } from '../../shared/models/request.model';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
+import { Quotation, StatusQuotation } from '../../shared/models/quotation.model';
 
 @Component({
-  selector: 'app-requests-list',
+  selector: 'app-quotations-list',
   standalone: true,
   imports: [
     CommonModule,
@@ -29,48 +29,48 @@ import { NavbarComponent } from '../../shared/components/navbar/navbar.component
     MatInputModule,
     NavbarComponent
   ],
-  templateUrl: './request-list.component.html',
-  styleUrls: ['./request-list.component.scss']
+  templateUrl: './quotation-list.component.html',
+  styleUrls: ['./quotation-list.component.scss']
 })
-export class RequestListComponent implements OnInit {
-  displayedColumns: string[] = ['code', 'creator', 'supplier', 'createdAt', 'description', 'status', 'total', 'actions'];
-  dataSource = new MatTableDataSource<Request>();
+export class QuotationListComponent implements OnInit {
+  displayedColumns: string[] = ['code', 'creator', 'description', 'createdAt', 'status', 'total', 'actions'];
+  dataSource = new MatTableDataSource<Quotation>();
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  requests: Request[] = [
+  quotations: Quotation[] = [
     {
       id: 1,
       code: '000001',
       creator: 'João Silva',
-      description: 'Pedido de teste',
-      supplier: { id: 1, name: 'Fornecedor A', cnpj: '00.000.000/0001-00' },
+      description: 'Descrição Cotação 1',
+      suppliers: [],
       itens: [],
       createdAt: new Date('2024-01-15'),
-      status: StatusRequest.Delivered,
+      status: StatusQuotation.GeneratedRequest,
       total: 1250.50
     },
     {
       id: 2,
       code: '000002',
       creator: 'Maria Santos',
-      description: 'Pedido de teste 2',
-      supplier: { id: 2, name: 'Fornecedor B', cnpj: '00.000.000/0002-00' },
+      description: 'Descrição Cotação 2',
+      suppliers: [],
       itens: [],
       createdAt: new Date('2024-01-16'),
-      status: StatusRequest.Pending,
+      status: StatusQuotation.Pending,
       total: 890.00
     },
     {
       id: 3,
       code: '000003',
       creator: 'Carlos Oliveira',
-      description: 'Pedido de teste 3',
-      supplier: { id: 3, name: 'Fornecedor C', cnpj: '00.000.000/0003-00' },
+      description: 'Descrição Cotação 3',
+      suppliers: [],
       itens: [],
       createdAt: new Date('2024-01-17'),
-      status: StatusRequest.Canceled,
+      status: StatusQuotation.InDecision,
       total: 2450.75
     }
   ];
@@ -78,7 +78,7 @@ export class RequestListComponent implements OnInit {
   constructor(private router: Router) {}
 
   public ngOnInit() {
-    this.dataSource.data = this.requests;
+    this.dataSource.data = this.quotations;
   }
 
   public ngAfterViewInit() {
@@ -95,16 +95,16 @@ export class RequestListComponent implements OnInit {
     }
   }
 
-  public edit(request: Request) {
-    this.router.navigate(['/request/edit/', request.id]);
+  public edit(quotation: Quotation) {
+    this.router.navigate(['/quotation/edit/', quotation.id]);
   }
 
-  public delete(request: Request) {
+  public delete(quotation: Quotation) {
     // Lógica de exclusão aqui
   }
 
   public create() {
-    this.router.navigate(['/request/edit']);
+    this.router.navigate(['/quotation/edit']);
   }
 
 }

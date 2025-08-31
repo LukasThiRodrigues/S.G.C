@@ -1,14 +1,14 @@
-<div class="requests-container">
+<div class="form-container">
   <app-navbar></app-navbar>
 
-  <div class="requests-content">
+  <div class="form-content">
     <div class="header-actions">
-      <h1 class="page-title">Pedidos</h1>
+      <h1 class="page-title">Cotações</h1>
       <button mat-raised-button 
         style="background-color: #46b438; color: white;" 
         (click)="create()">
         <mat-icon style="color: white !important;">add</mat-icon>
-        Novo Pedido
+        Nova Cotação
       </button>
     </div>
 
@@ -16,7 +16,7 @@
       <mat-card-content>
         <div class="search-container">
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Buscar pedidos</mat-label>
+            <mat-label>Buscar cotação</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="Ex: 000001">
             <mat-icon matSuffix>search</mat-icon>
           </mat-form-field>
@@ -26,50 +26,45 @@
           <table mat-table [dataSource]="dataSource" matSort>
             <ng-container matColumnDef="code">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Código</th>
-              <td mat-cell *matCellDef="let request">{{request.code}}</td>
+              <td mat-cell *matCellDef="let quotation">{{quotation.code}}</td>
             </ng-container>
 
             <ng-container matColumnDef="creator">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Criador</th>
-              <td mat-cell *matCellDef="let request">{{request.creator}}</td>
+              <td mat-cell *matCellDef="let quotation">{{quotation.creator}}</td>
             </ng-container>
 
             <ng-container matColumnDef="description">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Descrição</th>
-              <td mat-cell *matCellDef="let request">{{request.description}}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="supplier">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Fornecedor</th>
-              <td mat-cell *matCellDef="let request">{{request.supplier.name}}</td>
+              <td mat-cell *matCellDef="let quotation">{{quotation.description}}</td>
             </ng-container>
 
             <ng-container matColumnDef="createdAt">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Data da Emissão</th>
-              <td mat-cell *matCellDef="let request">{{request.createdAt | date:'dd/MM/yyyy'}}</td>
+              <td mat-cell *matCellDef="let quotation">{{quotation.createdAt | date:'dd/MM/yyyy'}}</td>
             </ng-container>
 
             <ng-container matColumnDef="status">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-              <td mat-cell *matCellDef="let request">
-                <span class="status-badge" [class]="request.status.toLowerCase()">
-                  {{request.status}}
+              <td mat-cell *matCellDef="let quotation">
+                <span class="status-badge" [class]="quotation.status.toLowerCase()">
+                  {{quotation.status}}
                 </span>
               </td>
             </ng-container>
 
             <ng-container matColumnDef="total">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Valor Total</th>
-              <td mat-cell *matCellDef="let request">{{request.total | currency:'BRL'}}</td>
+              <td mat-cell *matCellDef="let quotation">{{quotation.total | currency:'BRL'}}</td>
             </ng-container>
 
             <ng-container matColumnDef="actions">
               <th mat-header-cell *matHeaderCellDef>Ações</th>
-              <td mat-cell *matCellDef="let request">
-                <button mat-icon-button color="primary" (click)="edit(request)" title="Editar">
+              <td mat-cell *matCellDef="let quotation">
+                <button mat-icon-button color="primary" (click)="edit(quotation)" title="Editar">
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-icon-button color="warn" (click)="delete(request)" title="Excluir">
+                <button mat-icon-button color="warn" (click)="delete(quotation)" title="Excluir">
                   <mat-icon>delete</mat-icon>
                 </button>
               </td>

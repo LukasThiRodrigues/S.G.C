@@ -1,22 +1,22 @@
 import { Item } from "./item.model";
 import { Supplier } from "./supplier.model";
 
-export enum StatusRequest {
+export enum StatusQuotation {
     Pending = 'Pendente',
+    InDecision = 'Em Decisão',
     Draft = 'Rascunho',
-    Delivered = 'Entregue',
+    GeneratedRequest = 'Pedido Gerado',
     Canceled = 'Cancelado'
 }
 
-export interface Request {
+export interface Quotation {
     id?: number;
     code: string;
     creator: string;
     createdAt: Date;
     description: string;
-    deliveredAt?: Date;
-    supplier: Supplier;
-    status: StatusRequest;
+    suppliers: Supplier[];
+    status: StatusQuotation;
     itens: Item[];
     total: number;
 }

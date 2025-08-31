@@ -1,36 +1,36 @@
 import { Component, OnInit } from '@angular/core';
-import { Request, StatusRequest } from '../../shared/models/request.model';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
+import { Quotation, StatusQuotation } from '../../shared/models/quotation.model';
 
 @Component({
-  selector: 'app-request-edit',
+  selector: 'app-quotation-edit',
   imports: [CommonModule, ReactiveFormsModule, RouterModule, NavbarComponent],
   standalone: true,
-  templateUrl: './request-edit.component.html',
-  styleUrl: './request-edit.component.scss'
+  templateUrl: './quotation-edit.component.html',
+  styleUrl: './quotation-edit.component.scss'
 })
-export class RequestEditComponent implements OnInit {
-  requestForm: FormGroup;
+export class QuotationEditComponent implements OnInit {
+  quotationForm: FormGroup;
   isEditMode = false;
-  requestId?: number;
+  quotationId?: number;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) {
-    this.requestForm = this.createForm();
+    this.quotationForm = this.createForm();
   }
 
   public ngOnInit() {
     this.route.params.subscribe(params => {
       if (params['id']) {
         this.isEditMode = true;
-        this.requestId = +params['id'];
-        this.load(this.requestId);
+        this.quotationId = +params['id'];
+        this.load(this.quotationId);
       }
     });
   }
@@ -39,13 +39,9 @@ export class RequestEditComponent implements OnInit {
     return this.fb.group({
       code: ['', Validators.required],
       createdAt: [new Date().toISOString().substring(0, 10), Validators.required],
-      description: null,
-      deliveredAt: [''],
-      supplier: this.fb.group({
-        name: ['', Validators.required],
-        cnpj: ['', Validators.required]
-      }),
-      status: [StatusRequest.Pending, Validators.required],
+      description: ['', Validators.required],
+      suppliers: this.fb.array([this.createSupplierForm()]),
+      status: [StatusQuotation.Pending, Validators.required],
       itens: this.fb.array([this.createItemForm()]),
       total: [0]
     });
@@ -61,22 +57,39 @@ export class RequestEditComponent implements OnInit {
     });
   }
 
-  get itens(): FormArray {
-    return this.requestForm.get('itens') as FormArray;
+  private createSupplierForm(): FormGroup {
+    return this.fb.group({
+      name: ['', Validators.required],
+      cnpj: ['', Validators.required],
+    });
   }
 
-  get supplier(): FormGroup {
-    return this.requestForm.get('supplier') as FormGroup;
+  get itens(): FormArray {
+    return this.quotationForm.get('itens') as FormArray;
+  }
+
+  get suppliers(): FormArray {
+    return this.quotationForm.get('suppliers') as FormArray;
   }
 
   public addItem() {
     this.itens.push(this.createItemForm());
   }
 
+  public addSupplier() {
+    this.suppliers.push(this.createSupplierForm());
+  }
+
   public removeItem(index: number) {
     if (this.itens.length > 1) {
       this.itens.removeAt(index);
       this.calculateTotal();
+    }
+  }
+
+  public removeSupplier(index: number) {
+    if (this.suppliers.length > 1) {
+      this.suppliers.removeAt(index);
     }
   }
 
@@ -93,18 +106,21 @@ export class RequestEditComponent implements OnInit {
     const total = this.itens.controls.reduce((sum, item) => {
       return sum + (item.get('total')?.value || 0);
     }, 0);
-    this.requestForm.patchValue({ total });
+    this.quotationForm.patchValue({ total });
   }
 
   private load(id: number) {
-    const requestMock: Request = {
+    const quotationMock: Quotation = {
       id: 1,
       code: '000001',
       createdAt: new Date(),
       creator: 'João Silva',
-      description: 'Pedido de teste',
-      supplier: { id: 1, name: 'Fornecedor A', cnpj: '00.000.000/0001-00' },
-      status: StatusRequest.Pending,
+      description: 'Descrição da Cotação',
+      suppliers: [
+        { cnpj: '12345678000195', name: 'Fornecedor A' },
+        { cnpj: '98765432000196', name: 'Fornecedor B' }
+      ],
+      status: StatusQuotation.Pending,
       itens: [
         { item: 'Produto A', quantity: 2, unit: 'UN', price: 100, total: 200 },
         { item: 'Produto B', quantity: 1, unit: 'UN', price: 50, total: 50 }
@@ -116,20 +132,20 @@ export class RequestEditComponent implements OnInit {
       this.itens.removeAt(0);
     }
 
-    requestMock.itens.forEach(item => {
+    quotationMock.itens.forEach(item => {
       this.itens.push(this.fb.group(item));
     });
 
-    this.requestForm.patchValue(requestMock);
+    this.quotationForm.patchValue(quotationMock);
   }
 
   public onSubmit() {
-    if (this.requestForm.valid) {
-      this.router.navigate(['/requests']);
+    if (this.quotationForm.valid) {
+      this.router.navigate(['/quotations']);
     }
   }
 
   public cancel() {
-    this.router.navigate(['/requests']);
+    this.router.navigate(['/quotations']);
   }
 }

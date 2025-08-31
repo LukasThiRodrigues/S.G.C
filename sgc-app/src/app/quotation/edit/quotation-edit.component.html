@@ -1,33 +1,21 @@
-<div class="pedido-container">
+<div class="form-container">
   <app-navbar></app-navbar>
 
-  <div class="pedido-card">
-    <h1 class="pedido-title">
-      {{ isEditMode ? 'Editar Pedido' : 'Novo Pedido' }}
+  <div class="form-card">
+    <h1 class="form-title">
+      {{ isEditMode ? 'Editar Cotação' : 'Nova Cotação' }}
     </h1>
 
-    <form [formGroup]="requestForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="quotationForm" (ngSubmit)="onSubmit()">
       <div class="form-row">
         <div class="form-group">
-          <label>Código do Pedido</label>
+          <label>Código</label>
           <input type="text" formControlName="code" placeholder="Ex: 000001">
         </div>
 
         <div class="form-group">
           <label>Data de Emissão</label>
           <input type="date" formControlName="createdAt">
-        </div>
-
-        <div class="form-group">
-          <label>Data de Entrega</label>
-          <input type="date" formControlName="deliveredAt">
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group" [formGroup]="supplier">
-          <label>Fornecedor</label>
-          <input type="text" formControlName="name" placeholder="Nome do fornecedor">
         </div>
 
         <div class="form-group">
@@ -38,9 +26,38 @@
         </div>
       </div>
 
+      <div class="form-group">
+        <label>Descrição</label>
+        <input type="text" formControlName="description" placeholder="Descrição da cotação">
+      </div>
+
       <div class="itens-section">
         <div class="section-header">
-          <h3>Itens do Pedido</h3>
+          <h3>Fornecedores</h3>
+          <button type="button" class="btn-add" (click)="addSupplier()">+ Adicionar Fornecedor</button>
+        </div>
+
+        <div formArrayName="suppliers">
+          <div class="item-row" *ngFor="let supplier of suppliers.controls; let i = index" [formGroupName]="i">
+            <div class="item-name">
+              <input type="text" formControlName="name" placeholder="Nome do fornecedor">
+            </div>
+
+            <div class="item-cnpj">
+              <input type="text" formControlName="cnpj" placeholder="CNPJ">
+            </div>
+
+            <div class="item-actions">
+              <button type="button" class="btn-remove" (click)="removeSupplier(i)" 
+                      [disabled]="suppliers.length === 1">×</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="itens-section">
+        <div class="section-header">
+          <h3>Itens</h3>
           <button type="button" class="btn-add" (click)="addItem()">+ Adicionar Item</button>
         </div>
 
@@ -77,14 +94,14 @@
       </div>
 
       <div class="total-section">
-        <div class="total-label">Total do Pedido:</div>
-        <div class="total-value">R$ {{ requestForm.get('total')?.value | number:'1.2-2' }}</div>
+        <div class="total-label">Total da Cotação:</div>
+        <div class="total-value">R$ {{ quotationForm.get('total')?.value | number:'1.2-2' }}</div>
       </div>
 
       <div class="form-actions">
         <button type="button" class="btn-cancelar" (click)="cancel()">Cancelar</button>
-        <button type="submit" class="btn-salvar" [disabled]="requestForm.invalid">
-          {{ isEditMode ? 'Atualizar' : 'Criar' }} Pedido
+        <button type="submit" class="btn-salvar" [disabled]="quotationForm.invalid">
+          {{ isEditMode ? 'Atualizar' : 'Criar' }} Cotação
         </button>
       </div>
     </form>
