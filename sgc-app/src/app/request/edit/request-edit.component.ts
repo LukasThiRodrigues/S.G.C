@@ -4,6 +4,7 @@ import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } fr
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
+import { SupplierStatus } from '../../shared/models/supplier.model';
 
 @Component({
   selector: 'app-request-edit',
@@ -103,7 +104,7 @@ export class RequestEditComponent implements OnInit {
       createdAt: new Date(),
       creator: 'João Silva',
       description: 'Pedido de teste',
-      supplier: { id: 1, name: 'Fornecedor A', cnpj: '00.000.000/0001-00' },
+      supplier: { id: 1, name: 'Fornecedor A', cnpj: '00.000.000/0001-00', status: SupplierStatus.Active },
       status: StatusRequest.Pending,
       itens: [
         { item: 'Produto A', quantity: 2, unit: 'UN', price: 100, total: 200 },
