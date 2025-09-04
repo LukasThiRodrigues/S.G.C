@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { Quotation, StatusQuotation } from '../../shared/models/quotation.model';
+import { SupplierStatus } from '../../shared/models/supplier.model';
 
 @Component({
   selector: 'app-quotation-edit',
@@ -117,8 +118,8 @@ export class QuotationEditComponent implements OnInit {
       creator: 'João Silva',
       description: 'Descrição da Cotação',
       suppliers: [
-        { cnpj: '12345678000195', name: 'Fornecedor A' },
-        { cnpj: '98765432000196', name: 'Fornecedor B' }
+        { cnpj: '12345678000195', name: 'Fornecedor A', status: SupplierStatus.Active },
+        { cnpj: '98765432000196', name: 'Fornecedor B', status: SupplierStatus.Active }
       ],
       status: StatusQuotation.Pending,
       itens: [
