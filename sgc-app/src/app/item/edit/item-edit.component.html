@@ -1,0 +1,40 @@
+<div class="form-container">
+  <app-navbar></app-navbar>
+
+  <div class="form-card">
+    <h1 class="form-title">
+      {{ isEditMode ? 'Editar Item' : 'Adicionar Item' }}
+    </h1>
+
+    <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Código</label>
+          <input type="text" formControlName="code" placeholder="Ex: 001">
+        </div>
+
+        <div class="form-group">
+          <label>Unidade</label>
+          <input type="text" formControlName="unit">
+        </div>
+
+        <div class="form-group">
+          <label>Preço</label>
+          <input type="number" formControlName="price">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Item</label>
+        <input type="text" formControlName="item">
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-cancelar" (click)="cancel()">Cancelar</button>
+        <button type="submit" class="btn-salvar" [disabled]="itemForm.invalid">
+          {{ isEditMode ? 'Atualizar' : 'Adicionar' }} Item
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

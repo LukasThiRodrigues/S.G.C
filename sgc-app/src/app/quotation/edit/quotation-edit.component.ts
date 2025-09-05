@@ -123,8 +123,8 @@ export class QuotationEditComponent implements OnInit {
       ],
       status: StatusQuotation.Pending,
       itens: [
-        { item: 'Produto A', quantity: 2, unit: 'UN', price: 100, total: 200 },
-        { item: 'Produto B', quantity: 1, unit: 'UN', price: 50, total: 50 }
+        { item: 'Produto A', code: '0001', quantity: 2, unit: 'UN', price: 100, total: 200 },
+        { item: 'Produto B', code: '0002', quantity: 1, unit: 'UN', price: 50, total: 50 }
       ],
       total: 250
     };

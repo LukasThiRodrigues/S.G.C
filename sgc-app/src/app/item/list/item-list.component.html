@@ -3,12 +3,12 @@
 
   <div class="form-content">
     <div class="header-actions">
-      <h1 class="page-title">Fornecedores</h1>
+      <h1 class="page-title">Itens</h1>
       <button mat-raised-button 
         style="background-color: #46b438; color: white;" 
         (click)="create()">
         <mat-icon style="color: white !important;">add</mat-icon>
-        Convidar Fornecedor
+        Adicionar Item
       </button>
     </div>
 
@@ -16,38 +16,41 @@
       <mat-card-content>
         <div class="search-container">
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Buscar fornecedor</mat-label>
-            <input matInput (keyup)="applyFilter($event)" placeholder="Ex: 00.000.000/0001-00">
+            <mat-label>Buscar item</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Ex: item A">
             <mat-icon matSuffix>search</mat-icon>
           </mat-form-field>
         </div>
 
         <div class="table-container">
           <table mat-table [dataSource]="dataSource" matSort>
-            <ng-container matColumnDef="cnpj">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>CNPJ</th>
-              <td mat-cell *matCellDef="let supplier">{{supplier.cnpj}}</td>
+            <ng-container matColumnDef="code">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Código</th>
+              <td mat-cell *matCellDef="let item">{{item.code}}</td>
             </ng-container>
 
-            <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
-              <td mat-cell *matCellDef="let supplier">{{supplier.name}}</td>
+            <ng-container matColumnDef="item">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Item</th>
+              <td mat-cell *matCellDef="let item">{{item.item}}</td>
             </ng-container>
 
-            <ng-container matColumnDef="status">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-              <td mat-cell *matCellDef="let supplier">
-                <app-status type="supplier" [status]="supplier.status"></app-status>
-              </td>
+            <ng-container matColumnDef="unit">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Unidade</th>
+              <td mat-cell *matCellDef="let item">{{item.unit}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="price">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Preço</th>
+              <td mat-cell *matCellDef="let item">{{item.price}}</td>
             </ng-container>
 
             <ng-container matColumnDef="actions">
               <th mat-header-cell *matHeaderCellDef>Ações</th>
-              <td mat-cell *matCellDef="let supplier">
-                <button mat-icon-button color="primary" (click)="edit(supplier)" title="Editar">
+              <td mat-cell *matCellDef="let item">
+                <button mat-icon-button color="primary" (click)="edit(item)" title="Editar">
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-icon-button color="warn" (click)="delete(supplier)" title="Excluir">
+                <button mat-icon-button color="warn" (click)="delete(item)" title="Excluir">
                   <mat-icon>delete</mat-icon>
                 </button>
               </td>

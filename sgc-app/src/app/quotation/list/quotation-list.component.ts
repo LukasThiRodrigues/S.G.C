@@ -11,6 +11,7 @@ import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { Quotation, StatusQuotation } from '../../shared/models/quotation.model';
+import { StatusComponent } from '../../shared/components/status/status.component';
 
 @Component({
   selector: 'app-quotations-list',
@@ -27,7 +28,8 @@ import { Quotation, StatusQuotation } from '../../shared/models/quotation.model'
     MatFormFieldModule,
     MatLabel,
     MatInputModule,
-    NavbarComponent
+    NavbarComponent,
+    StatusComponent
   ],
   templateUrl: './quotation-list.component.html',
   styleUrls: ['./quotation-list.component.scss']
