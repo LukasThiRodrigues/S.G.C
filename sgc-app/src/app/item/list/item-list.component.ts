@@ -10,11 +10,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
-import { Supplier, SupplierStatus } from '../../shared/models/supplier.model';
-import { StatusComponent } from '../../shared/components/status/status.component';
+import { Item } from '../../shared/models/item.model';
 
 @Component({
-  selector: 'app-suppliers-list',
+  selector: 'app-item-list',
   standalone: true,
   imports: [
     CommonModule,
@@ -28,44 +27,52 @@ import { StatusComponent } from '../../shared/components/status/status.component
     MatFormFieldModule,
     MatLabel,
     MatInputModule,
-    NavbarComponent,
-    StatusComponent
+    NavbarComponent
   ],
-  templateUrl: './supplier-list.component.html',
-  styleUrls: ['./supplier-list.component.scss']
+  templateUrl: './item-list.component.html',
+  styleUrls: ['./item-list.component.scss']
 })
-export class SupplierListComponent implements OnInit {
-  displayedColumns: string[] = ['cnpj', 'name', 'status', 'actions'];
-  dataSource = new MatTableDataSource<Supplier>();
+export class ItemListComponent implements OnInit {
+  displayedColumns: string[] = ['code', 'item', 'unit', 'price', 'actions'];
+  dataSource = new MatTableDataSource<Item>();
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  suppliers: Supplier[] = [
+  items: Item[] = [
     {
       id: 1,
-      cnpj: '00.000.000/0001-00',
-      name: 'Fornecedor A',
-      status: SupplierStatus.Active
+      item: 'Item A',
+      code: 'A001',
+      unit: 'UN',
+      quantity: 10,
+      price: 15.5,
+      total: 155
     },
     {
       id: 2,
-      cnpj: '00.000.000/0002-00',
-      name: 'Fornecedor B',
-      status: SupplierStatus.Invited
+      item: 'Item B',
+      code: 'B002',
+      unit: 'CX',
+      quantity: 1,
+      price: 20,
+      total: 20
     },
     {
-      id: 1,
-      cnpj: '00.000.000/0003-00',
-      name: 'Fornecedor C',
-      status: SupplierStatus.Inactive
+      id: 3,
+      item: 'Item C',
+      code: 'C003',
+      unit: 'UN',
+      quantity: 1,
+      price: 150,
+      total: 150
     }
   ];
 
   constructor(private router: Router) {}
 
   public ngOnInit() {
-    this.dataSource.data = this.suppliers;
+    this.dataSource.data = this.items;
   }
 
   public ngAfterViewInit() {
@@ -82,16 +89,16 @@ export class SupplierListComponent implements OnInit {
     }
   }
 
-  public edit(supplier: Supplier) {
-    this.router.navigate(['/supplier/edit/', supplier.id]);
+  public edit(item: Item) {
+    this.router.navigate(['/item/edit/', item.id]);
   }
 
-  public delete(supplier: Supplier) {
+  public delete(item: Item) {
     // Lógica de exclusão aqui
   }
 
   public create() {
-    this.router.navigate(['/supplier/edit']);
+    this.router.navigate(['/item/edit']);
   }
 
 }

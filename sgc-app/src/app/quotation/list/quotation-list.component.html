@@ -47,9 +47,7 @@
             <ng-container matColumnDef="status">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
               <td mat-cell *matCellDef="let quotation">
-                <span class="status-badge" [class]="quotation.status.toLowerCase()">
-                  {{quotation.status}}
-                </span>
+                <app-status type="quotation" [status]="quotation.status"></app-status>
               </td>
             </ng-container>
 

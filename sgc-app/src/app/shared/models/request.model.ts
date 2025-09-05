@@ -2,10 +2,12 @@ import { Item } from "./item.model";
 import { Supplier } from "./supplier.model";
 
 export enum StatusRequest {
-    Pending = 'Pendente',
-    Draft = 'Rascunho',
-    Delivered = 'Entregue',
-    Canceled = 'Cancelado'
+    Pending = 'pending',
+    SupplierAccepted = 'supplierAccepted',
+    SupplierRejected = 'supplierRejected',
+    Draft = 'draft',
+    Delivered = 'delivered',
+    Canceled = 'canceled'
 }
 
 export interface Request {

@@ -1,7 +1,7 @@
 export enum SupplierStatus {
-    Invited = 'Convidado',
-    Active = 'Ativo',
-    Inactive = 'Inativo',
+    Invited = 'invited',
+    Active = 'active',
+    Inactive = 'inactive',
 }
 
 export interface Supplier {

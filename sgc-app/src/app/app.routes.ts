@@ -6,6 +6,8 @@ import { QuotationListComponent } from './quotation/list/quotation-list.componen
 import { QuotationEditComponent } from './quotation/edit/quotation-edit.component';
 import { SupplierListComponent } from './supplier/list/supplier-list.component';
 import { SupplierEditComponent } from './supplier/edit/supplier-edit.component';
+import { ItemListComponent } from './item/list/item-list.component';
+import { ItemEditComponent } from './item/edit/item-edit.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -19,4 +21,7 @@ export const routes: Routes = [
   { path: 'suppliers', component: SupplierListComponent },
   { path: 'supplier/edit', component: SupplierEditComponent },
   { path: 'supplier/edit/:id', component: SupplierEditComponent },
+  { path: 'items', component: ItemListComponent },
+  { path: 'item/edit', component: ItemEditComponent },
+  { path: 'item/edit/:id', component: ItemEditComponent },
 ];

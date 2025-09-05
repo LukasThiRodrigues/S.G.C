@@ -50,29 +50,6 @@ $text-color: #333333;
   }
 }
 
-/* Badges de status */
-.status-badge {
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 500;
-
-  &.entregue {
-    background-color: #4caf50;
-    color: white;
-  }
-
-  &.pendente {
-    background-color: #ff9800;
-    color: white;
-  }
-
-  &.cancelado {
-    background-color: #f44336;
-    color: white;
-  }
-}
-
 /* Responsividade */
 @media (max-width: 768px) {
   .navbar {

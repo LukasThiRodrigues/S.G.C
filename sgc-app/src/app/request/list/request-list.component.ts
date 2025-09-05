@@ -12,6 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { Request, StatusRequest } from '../../shared/models/request.model';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { SupplierStatus } from '../../shared/models/supplier.model';
+import { StatusComponent } from '../../shared/components/status/status.component';
 
 @Component({
   selector: 'app-requests-list',
@@ -28,7 +29,8 @@ import { SupplierStatus } from '../../shared/models/supplier.model';
     MatFormFieldModule,
     MatLabel,
     MatInputModule,
-    NavbarComponent
+    NavbarComponent,
+    StatusComponent
   ],
   templateUrl: './request-list.component.html',
   styleUrls: ['./request-list.component.scss']

@@ -1,0 +1,21 @@
+.status-badge {
+  font-size: 12px;
+  min-height: 18px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+
+  &.orange { background-color: #f97316; }
+  &.blue { background-color: #3b82f6; }
+  &.gray { background-color: #6b7280; }
+  &.green { background-color: #22c55e; }
+  &.red { background-color: #ef4444; }
+  &.indigo { background-color: #6366f1; }
+
+  &:not([class*="orange"]):not([class*="blue"]):not([class*="gray"]):not([class*="green"]):not([class*="red"]):not([class*="indigo"]) {
+    background-color: #6b7280;
+  }
+}

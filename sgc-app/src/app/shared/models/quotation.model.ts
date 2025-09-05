@@ -2,11 +2,11 @@ import { Item } from "./item.model";
 import { Supplier } from "./supplier.model";
 
 export enum StatusQuotation {
-    Pending = 'Pendente',
-    InDecision = 'Em Decisão',
-    Draft = 'Rascunho',
-    GeneratedRequest = 'Pedido Gerado',
-    Canceled = 'Cancelado'
+    Pending = 'pending',
+    InDecision = 'inDecision',
+    Draft = 'draft',
+    GeneratedRequest = 'generatedRequest',
+    Canceled = 'canceled'
 }
 
 export interface Quotation {
