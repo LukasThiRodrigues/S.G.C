@@ -2,7 +2,7 @@
 node_modules/
 dist/
 .angular/
-compose.yml
+docker-compose.yml
 
 # Ambiente
 .env
