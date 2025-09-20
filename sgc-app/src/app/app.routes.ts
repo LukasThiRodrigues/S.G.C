@@ -8,10 +8,12 @@ import { SupplierListComponent } from './supplier/list/supplier-list.component';
 import { SupplierEditComponent } from './supplier/edit/supplier-edit.component';
 import { ItemListComponent } from './item/list/item-list.component';
 import { ItemEditComponent } from './item/edit/item-edit.component';
+import { RegisterComponent } from './register/register.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full'},
   { path: 'login', component: LoginComponent},
+  { path: 'register', component: RegisterComponent},
   { path: 'requests', component: RequestListComponent},
   { path: 'request/edit', component: RequestEditComponent },
   { path: 'request/edit/:id', component: RequestEditComponent },
