@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { AuthService, LoginRequest } from '../services/auth.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -9,7 +11,8 @@ import { Router, RouterModule } from '@angular/router';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterModule
+    RouterModule,
+    HttpClientModule
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
@@ -21,7 +24,8 @@ export class LoginComponent {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -35,16 +39,22 @@ export class LoginComponent {
     this.loading = true;
     this.errorMessage = null;
 
-    setTimeout(() => {
-      this.loading = false;
-      const { email, password } = this.loginForm.value;
-      
-      if (email === 'teste@email.com' && password === '123456') {
+    const loginRequest: LoginRequest = {
+      email: this.loginForm.value.email,
+      password: this.loginForm.value.password
+    };
+
+    this.authService.login(loginRequest).subscribe({
+      next: (response) => {
+        this.loading = false;
         this.router.navigate(['/requests']);
-      } else {
-        this.errorMessage = 'E-mail ou senha incorretos!';
+      },
+      error: (error) => {
+        this.loading = false;
+        this.errorMessage = error.error?.message || 'E-mail ou senha incorretos!';
+
       }
-    }, 500);
+    });
   }
 
   get email() {
