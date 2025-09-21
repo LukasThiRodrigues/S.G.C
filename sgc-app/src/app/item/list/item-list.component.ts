@@ -11,6 +11,7 @@ import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { Item } from '../../shared/models/item.model';
+import { ItemService } from '../../services/item.service';
 
 @Component({
   selector: 'app-item-list',
@@ -33,46 +34,19 @@ import { Item } from '../../shared/models/item.model';
   styleUrls: ['./item-list.component.scss']
 })
 export class ItemListComponent implements OnInit {
-  displayedColumns: string[] = ['code', 'item', 'unit', 'price', 'actions'];
+  displayedColumns: string[] = ['code', 'item', 'description', 'unit', 'actions'];
   dataSource = new MatTableDataSource<Item>();
-  
+  searchText: string = '';
+  page: number = 1;
+  limit: number = 10;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  items: Item[] = [
-    {
-      id: 1,
-      item: 'Item A',
-      code: 'A001',
-      unit: 'UN',
-      quantity: 10,
-      price: 15.5,
-      total: 155
-    },
-    {
-      id: 2,
-      item: 'Item B',
-      code: 'B002',
-      unit: 'CX',
-      quantity: 1,
-      price: 20,
-      total: 20
-    },
-    {
-      id: 3,
-      item: 'Item C',
-      code: 'C003',
-      unit: 'UN',
-      quantity: 1,
-      price: 150,
-      total: 150
-    }
-  ];
-
-  constructor(private router: Router) {}
+  constructor(private router: Router, private service: ItemService) { }
 
   public ngOnInit() {
-    this.dataSource.data = this.items;
+    this.loadItems();
   }
 
   public ngAfterViewInit() {
@@ -81,24 +55,49 @@ export class ItemListComponent implements OnInit {
   }
 
   public applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.searchText = filterValue;
+    this.page = 1;
+    this.loadItems();
   }
 
-  public edit(item: Item) {
-    this.router.navigate(['/item/edit/', item.id]);
+  public edit(id: number) {
+    this.router.navigate(['/item/edit/', id]);
   }
 
-  public delete(item: Item) {
-    // Lógica de exclusão aqui
+  public delete(id: number) {
+    this.service.delete(id).subscribe({
+      next: () => {
+        this.loadItems();
+      },
+      error: (err) => {
+        console.error('Erro ao excluir item:', err);
+      }
+    });
   }
 
   public create() {
     this.router.navigate(['/item/edit']);
+  }
+
+  private loadItems() {
+    this.service.findAll(this.page, this.limit, this.searchText).subscribe({
+      next: (res: any) => {
+        this.dataSource.data = res.items;
+
+        if (this.paginator) {
+          this.paginator.length = res.total;
+          this.dataSource.paginator = this.paginator;
+        }
+
+        if (this.sort) {
+          this.dataSource.sort = this.sort;
+        }
+      },
+      error: (err) => {
+        console.error('Erro ao carregar itens:', err);
+      }
+    });
   }
 
 }
