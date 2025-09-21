@@ -107,8 +107,8 @@ export class RequestEditComponent implements OnInit {
       supplier: { id: 1, name: 'Fornecedor A', cnpj: '00.000.000/0001-00', status: SupplierStatus.Active },
       status: StatusRequest.Pending,
       itens: [
-        { item: 'Produto A', code: '0001', quantity: 2, unit: 'UN', price: 100, total: 200 },
-        { item: 'Produto B', code: '0002', quantity: 1, unit: 'UN', price: 50, total: 50 }
+        { item: 'Produto A', description: 'Descrição do Produto A', code: '0001', quantity: 2, unit: 'UN', price: 100, total: 200 },
+        { item: 'Produto B', description: 'Descrição do Produto B', code: '0002', quantity: 1, unit: 'UN', price: 50, total: 50 }
       ],
       total: 250
     };

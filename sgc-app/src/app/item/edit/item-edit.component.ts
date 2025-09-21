@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { Item } from '../../shared/models/item.model';
+import { ItemService } from '../../services/item.service';
 
 @Component({
   selector: 'app-item-edit',
@@ -20,7 +21,8 @@ export class ItemEditComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private service: ItemService
   ) {
     this.itemForm = this.createForm();
   }
@@ -37,30 +39,37 @@ export class ItemEditComponent implements OnInit {
 
   private createForm(): FormGroup {
     return this.fb.group({
+      id: null,
       item: ['', Validators.required],
+      description: null,
       code: ['', Validators.required],
       unit: ['', Validators.required],
-      price: [0, [Validators.required, Validators.min(0)]],
     });
   }
 
   private load(id: number) {
-    const itemMock: Item = {
-      id: 1,
-      item: 'Item A',
-      code: 'A001',
-      unit: 'UN',
-      quantity: 10,
-      price: 15.5,
-      total: 155
-    };
-
-    this.itemForm.patchValue(itemMock);
+    this.service.findOne(id).subscribe({
+      next: (item: Item) => {
+        this.itemForm.patchValue(item);
+      }
+    });
   }
 
   public onSubmit() {
     if (this.itemForm.valid) {
-      this.router.navigate(['/items']);
+      if (!this.isEditMode) {
+        this.service.create(this.itemForm.value).subscribe(item => {
+          if (item) {
+            this.router.navigate(['/items']);
+          }
+        });
+      } else {
+        this.service.update(this.itemForm.value).subscribe(item => {
+          if (item) {
+            this.router.navigate(['/items']);
+          }
+        });
+      }
     }
   }
 
