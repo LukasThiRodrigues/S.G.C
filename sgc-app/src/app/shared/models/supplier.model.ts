@@ -9,4 +9,5 @@ export interface Supplier {
     name: string;
     cnpj: string;
     status: SupplierStatus;
+    contactEmail: string;
 }

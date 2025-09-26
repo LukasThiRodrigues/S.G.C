@@ -104,7 +104,7 @@ export class RequestEditComponent implements OnInit {
       createdAt: new Date(),
       creator: 'João Silva',
       description: 'Pedido de teste',
-      supplier: { id: 1, name: 'Fornecedor A', cnpj: '00.000.000/0001-00', status: SupplierStatus.Active },
+      supplier: { id: 1, name: 'Fornecedor A', cnpj: '00.000.000/0001-00', status: SupplierStatus.Active, contactEmail: 'fornecedorA@email.com' },
       status: StatusRequest.Pending,
       itens: [
         { item: 'Produto A', description: 'Descrição do Produto A', code: '0001', quantity: 2, unit: 'UN', price: 100, total: 200 },
