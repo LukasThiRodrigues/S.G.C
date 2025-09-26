@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { Supplier, SupplierStatus } from '../../shared/models/supplier.model';
+import { SupplierService } from '../../services/supplier.service';
 
 @Component({
   selector: 'app-supplier-edit',
@@ -20,7 +21,8 @@ export class SupplierEditComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private service: SupplierService
   ) {
     this.supplierForm = this.createForm();
   }
@@ -39,24 +41,35 @@ export class SupplierEditComponent implements OnInit {
     return this.fb.group({
       cnpj: ['', Validators.required],
       name: ['', Validators.required],
-      status: [SupplierStatus.Active, Validators.required]
+      status: [SupplierStatus.Inactive, Validators.required],
+      contactEmail: ['', [Validators.required, Validators.email]]
     });
   }
 
   private load(id: number) {
-    const supplierMock: Supplier = {
-      id: 1,
-      cnpj: '00.000.000/0001-00',
-      name: 'Fornecedor A',
-      status: SupplierStatus.Active
-    };
-
-    this.supplierForm.patchValue(supplierMock);
+    this.service.findOne(id).subscribe({
+      next: (supplier: Supplier) => {
+        this.supplierForm.patchValue(supplier);
+      }
+    });
   }
 
   public onSubmit() {
     if (this.supplierForm.valid) {
-      this.router.navigate(['/suppliers']);
+      if (!this.isEditMode) {
+        this.supplierForm.get('status')?.setValue(SupplierStatus.Invited);
+        this.service.create(this.supplierForm.value).subscribe(supplier => {
+          if (supplier) {
+            this.router.navigate(['/suppliers']);
+          }
+        });
+      } else {
+        this.service.update(this.supplierForm.value).subscribe(supplier => {
+          if (supplier) {
+            this.router.navigate(['/suppliers']);
+          }
+        });
+      }
     }
   }
 
