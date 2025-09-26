@@ -12,6 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { Supplier, SupplierStatus } from '../../shared/models/supplier.model';
 import { StatusComponent } from '../../shared/components/status/status.component';
+import { SupplierService } from '../../services/supplier.service';
 
 @Component({
   selector: 'app-suppliers-list',
@@ -37,35 +38,17 @@ import { StatusComponent } from '../../shared/components/status/status.component
 export class SupplierListComponent implements OnInit {
   displayedColumns: string[] = ['cnpj', 'name', 'status', 'actions'];
   dataSource = new MatTableDataSource<Supplier>();
-  
+  searchText: string = '';
+  page: number = 1;
+  limit: number = 10;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  suppliers: Supplier[] = [
-    {
-      id: 1,
-      cnpj: '00.000.000/0001-00',
-      name: 'Fornecedor A',
-      status: SupplierStatus.Active
-    },
-    {
-      id: 2,
-      cnpj: '00.000.000/0002-00',
-      name: 'Fornecedor B',
-      status: SupplierStatus.Invited
-    },
-    {
-      id: 1,
-      cnpj: '00.000.000/0003-00',
-      name: 'Fornecedor C',
-      status: SupplierStatus.Inactive
-    }
-  ];
-
-  constructor(private router: Router) {}
+  constructor(private router: Router, private service: SupplierService) { }
 
   public ngOnInit() {
-    this.dataSource.data = this.suppliers;
+    this.loadSuppliers();
   }
 
   public ngAfterViewInit() {
@@ -74,24 +57,69 @@ export class SupplierListComponent implements OnInit {
   }
 
   public applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.searchText = filterValue;
+    this.page = 1;
+    this.loadSuppliers();
   }
 
-  public edit(supplier: Supplier) {
-    this.router.navigate(['/supplier/edit/', supplier.id]);
+  public edit(id: number) {
+    this.router.navigate(['/supplier/edit/', id]);
   }
 
-  public delete(supplier: Supplier) {
-    // Lógica de exclusão aqui
+  public inactive(supplier: Supplier) {
+    supplier.status = SupplierStatus.Inactive;
+
+    this.service.update(supplier).subscribe({
+      next: () => {
+        this.loadSuppliers();
+      },
+    })
+  }
+
+  public active(supplier: Supplier) {
+    supplier.status = SupplierStatus.Active;
+
+    this.service.update(supplier).subscribe({
+      next: () => {
+        this.loadSuppliers();
+      },
+    })
+  }
+
+  public delete(id: number) {
+    this.service.delete(id).subscribe({
+      next: () => {
+        this.loadSuppliers();
+      },
+      error: (err) => {
+        console.error('Erro ao excluir fornecedor:', err);
+      }
+    });
   }
 
   public create() {
-    this.router.navigate(['/supplier/edit']);
+    this.router.navigate(['/suppliers/edit']);
+  }
+
+  private loadSuppliers() {
+    this.service.findAll(this.page, this.limit, this.searchText).subscribe({
+      next: (res: any) => {
+        this.dataSource.data = res.suppliers;
+
+        if (this.paginator) {
+          this.paginator.length = res.total;
+          this.dataSource.paginator = this.paginator;
+        }
+
+        if (this.sort) {
+          this.dataSource.sort = this.sort;
+        }
+      },
+      error: (err) => {
+        console.error('Erro ao carregar fornecedores:', err);
+      }
+    });
   }
 
 }

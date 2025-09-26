@@ -118,8 +118,8 @@ export class QuotationEditComponent implements OnInit {
       creator: 'João Silva',
       description: 'Descrição da Cotação',
       suppliers: [
-        { cnpj: '12345678000195', name: 'Fornecedor A', status: SupplierStatus.Active },
-        { cnpj: '98765432000196', name: 'Fornecedor B', status: SupplierStatus.Active }
+        { cnpj: '12345678000195', name: 'Fornecedor A', status: SupplierStatus.Active, contactEmail: 'fornecedorA@email.com' },
+        { cnpj: '98765432000196', name: 'Fornecedor B', status: SupplierStatus.Active, contactEmail: 'fornecedorA@email.com' }
       ],
       status: StatusQuotation.Pending,
       itens: [
