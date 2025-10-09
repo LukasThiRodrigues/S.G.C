@@ -1,14 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { Request, StatusRequest } from '../../shared/models/request.model';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
-import { SupplierStatus } from '../../shared/models/supplier.model';
+import { Supplier, SupplierStatus } from '../../shared/models/supplier.model';
+import { SupplierService } from '../../services/supplier.service';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { Item } from '../../shared/models/item.model';
+import { ItemService } from '../../services/item.service';
+import { RequestService } from '../../services/request.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-request-edit',
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, NavbarComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, NavbarComponent, MatAutocompleteModule],
   standalone: true,
   templateUrl: './request-edit.component.html',
   styleUrl: './request-edit.component.scss'
@@ -17,21 +23,43 @@ export class RequestEditComponent implements OnInit {
   requestForm: FormGroup;
   isEditMode = false;
   requestId?: number;
+  searchTextSupplier: string = '';
+  searchTextItem: string = '';
+  page: number = 1;
+  limit: number = 10;
+  allSuppliers: Supplier[] = [];
+  allItens: Item[] = [];
+  supplierControl;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
+    private requestService: RequestService,
+    private supplierService: SupplierService,
+    private itemService: ItemService,
+    private authService: AuthService,
   ) {
     this.requestForm = this.createForm();
+    this.supplierControl = new FormControl<Supplier | null>(null, Validators.required);
   }
 
   public ngOnInit() {
     this.route.params.subscribe(params => {
+      const user = this.authService.getCurrentUser();
+
+      this.authService.findOne(user.sub).subscribe(user => {
+        this.requestForm.get('creator')?.patchValue(user);
+        this.requestForm.get('creator')?.disable();
+      });
+
       if (params['id']) {
         this.isEditMode = true;
         this.requestId = +params['id'];
         this.load(this.requestId);
+      } else {
+        this.requestForm.get('createdAt')?.disable();
+        this.requestForm.get('deliveredAt')?.disable();
       }
     });
   }
@@ -43,10 +71,15 @@ export class RequestEditComponent implements OnInit {
       description: null,
       deliveredAt: [''],
       supplier: this.fb.group({
+        id: null,
         name: ['', Validators.required],
         cnpj: ['', Validators.required]
       }),
-      status: [StatusRequest.Pending, Validators.required],
+      creator: this.fb.group({
+        id: null,
+        name: ['', Validators.required]
+      }),
+      status: null,
       itens: this.fb.array([this.createItemForm()]),
       total: [0]
     });
@@ -68,6 +101,10 @@ export class RequestEditComponent implements OnInit {
 
   get supplier(): FormGroup {
     return this.requestForm.get('supplier') as FormGroup;
+  }
+
+  get creator(): FormGroup {
+    return this.requestForm.get('creator') as FormGroup;
   }
 
   public addItem() {
@@ -98,39 +135,119 @@ export class RequestEditComponent implements OnInit {
   }
 
   private load(id: number) {
-    const requestMock: Request = {
-      id: 1,
-      code: '000001',
-      createdAt: new Date(),
-      creator: 'João Silva',
-      description: 'Pedido de teste',
-      supplier: { id: 1, name: 'Fornecedor A', cnpj: '00.000.000/0001-00', status: SupplierStatus.Active, contactEmail: 'fornecedorA@email.com' },
-      status: StatusRequest.Pending,
-      itens: [
-        { item: 'Produto A', description: 'Descrição do Produto A', code: '0001', quantity: 2, unit: 'UN', price: 100, total: 200 },
-        { item: 'Produto B', description: 'Descrição do Produto B', code: '0002', quantity: 1, unit: 'UN', price: 50, total: 50 }
-      ],
-      total: 250
-    };
+    this.requestService.findOne(id).subscribe({
+      next: (request: Request) => {
+        this.requestForm.patchValue({
+          ...request,
+          createdAt: new Date(request.createdAt).toISOString().substring(0, 10),
+          supplier: {
+            id: request.supplier?.id ?? null,
+            name: request.supplier?.name ?? '',
+            cnpj: request.supplier?.cnpj ?? ''
+          }
+        });
 
-    while (this.itens.length) {
-      this.itens.removeAt(0);
-    }
+        const supplier = request.supplier;
+        if (supplier && !this.allSuppliers.find(s => s.id === supplier.id)) {
+          this.allSuppliers.push(supplier);
+        }
 
-    requestMock.itens.forEach(item => {
-      this.itens.push(this.fb.group(item));
+        if (request.supplier) {
+          this.supplierControl.setValue(request.supplier);
+        }
+
+        const itensFormArray = this.fb.array(
+          request.itens.map(item => this.fb.group({
+            item: item.item,
+            unit: item.item.unit,
+            quantity: item.quantity,
+            price: item.price,
+            total: item.total
+          }))
+        );
+        this.requestForm.setControl('itens', itensFormArray);
+
+        this.requestForm.get('createdAt')?.disable();
+        this.requestForm.get('deliveredAt')?.disable();
+        this.requestForm.get('code')?.disable();
+        this.requestForm.get('itens')?.disable();
+        this.supplierControl.disable();
+      }
     });
-
-    this.requestForm.patchValue(requestMock);
   }
 
   public onSubmit() {
     if (this.requestForm.valid) {
-      this.router.navigate(['/requests']);
+      const formData = this.requestForm.getRawValue();
+
+      if (!this.isEditMode) {
+        formData.status = StatusRequest.Pending;
+
+        this.requestService.create(formData).subscribe(request => {
+          if (request) {
+            this.router.navigate(['/requests']);
+          }
+        });
+      } else {
+        formData.id = this.requestId;
+
+        this.requestService.update(formData).subscribe(request => {
+          if (request) {
+            this.router.navigate(['/requests']);
+          }
+        });
+      }
     }
   }
 
   public cancel() {
     this.router.navigate(['/requests']);
+  }
+
+  public searchSupplier(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.searchTextSupplier = filterValue;
+
+    this.supplierService.findAll(this.page, this.limit, this.searchTextSupplier).subscribe({
+      next: (res: any) => {
+        this.allSuppliers = res.suppliers;
+      }
+    });
+  }
+
+  displaySupplierFn(supplier?: Supplier): string {
+    return supplier ? supplier.name : '';
+  }
+
+  public onSupplierSelected(selectedSupplier: Supplier) {
+    this.requestForm.get('supplier')?.patchValue(selectedSupplier);
+    this.supplierControl.setValue(selectedSupplier);
+  }
+
+  public searchItem(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.searchTextItem = filterValue;
+
+    this.itemService.findAll(this.page, this.limit, this.searchTextItem).subscribe({
+      next: (res: any) => {
+        this.allItens = res.items;
+      }
+    });
+  }
+
+  displayItemFn(item?: Item): string {
+    return item ? item.item : '';
+  }
+
+  public onItemSelected(index: number, selectedItem: Item) {
+    const itemGroup = this.itens.at(index);
+    itemGroup.patchValue({
+      item: selectedItem,
+      unit: selectedItem.unit
+    });
+
+    itemGroup.get('unit')?.disable();
+
+    this.calculateTotalItem(index);
   }
 }

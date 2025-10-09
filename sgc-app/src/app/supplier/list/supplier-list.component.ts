@@ -99,7 +99,7 @@ export class SupplierListComponent implements OnInit {
   }
 
   public create() {
-    this.router.navigate(['/suppliers/edit']);
+    this.router.navigate(['/supplier/edit']);
   }
 
   private loadSuppliers() {
