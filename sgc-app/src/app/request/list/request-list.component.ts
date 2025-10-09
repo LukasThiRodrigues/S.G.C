@@ -13,6 +13,9 @@ import { Request, StatusRequest } from '../../shared/models/request.model';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { SupplierStatus } from '../../shared/models/supplier.model';
 import { StatusComponent } from '../../shared/components/status/status.component';
+import { RequestService } from '../../services/request.service';
+import { SupplierService } from '../../services/supplier.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-requests-list',
@@ -38,50 +41,20 @@ import { StatusComponent } from '../../shared/components/status/status.component
 export class RequestListComponent implements OnInit {
   displayedColumns: string[] = ['code', 'creator', 'supplier', 'createdAt', 'description', 'status', 'total', 'actions'];
   dataSource = new MatTableDataSource<Request>();
+  searchText: string = '';
+  page: number = 1;
+  limit: number = 10;
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  requests: Request[] = [
-    {
-      id: 1,
-      code: '000001',
-      creator: 'João Silva',
-      description: 'Pedido de teste',
-      supplier: { id: 1, name: 'Fornecedor A', cnpj: '00.000.000/0001-00', status: SupplierStatus.Active, contactEmail: 'fornecedorA@email.com' },
-      itens: [],
-      createdAt: new Date('2024-01-15'),
-      status: StatusRequest.Delivered,
-      total: 1250.50
-    },
-    {
-      id: 2,
-      code: '000002',
-      creator: 'Maria Santos',
-      description: 'Pedido de teste 2',
-      supplier: { id: 2, name: 'Fornecedor B', cnpj: '00.000.000/0002-00', status: SupplierStatus.Active, contactEmail: 'fornecedorA@email.com' },
-      itens: [],
-      createdAt: new Date('2024-01-16'),
-      status: StatusRequest.Pending,
-      total: 890.00
-    },
-    {
-      id: 3,
-      code: '000003',
-      creator: 'Carlos Oliveira',
-      description: 'Pedido de teste 3',
-      supplier: { id: 3, name: 'Fornecedor C', cnpj: '00.000.000/0003-00', status: SupplierStatus.Active, contactEmail: 'fornecedorA@email.com' },
-      itens: [],
-      createdAt: new Date('2024-01-17'),
-      status: StatusRequest.Canceled,
-      total: 2450.75
-    }
-  ];
-
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private service: RequestService,
+  ) {}
 
   public ngOnInit() {
-    this.dataSource.data = this.requests;
+    this.loadRequests();
   }
 
   public ngAfterViewInit() {
@@ -90,24 +63,48 @@ export class RequestListComponent implements OnInit {
   }
 
   public applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.searchText = filterValue;
+    this.page = 1;
+    this.loadRequests();
   }
 
   public edit(request: Request) {
     this.router.navigate(['/request/edit/', request.id]);
   }
 
-  public delete(request: Request) {
-    // Lógica de exclusão aqui
+  public cancel(request: Request) {
+    request.status = StatusRequest.Canceled;
+
+    this.service.update(request).subscribe({
+      next: () => {
+        this.loadRequests();
+      }
+    })
   }
 
   public create() {
     this.router.navigate(['/request/edit']);
+  }
+
+  private loadRequests() {
+    this.service.findAll(this.page, this.limit, this.searchText).subscribe({
+      next: (res: any) => {
+        this.dataSource.data = res.requests;
+
+        if (this.paginator) {
+          this.paginator.length = res.total;
+          this.dataSource.paginator = this.paginator;
+        }
+
+        if (this.sort) {
+          this.dataSource.sort = this.sort;
+        }
+      },
+      error: (err) => {
+        console.error('Erro ao carregar pedidos:', err);
+      }
+    });
   }
 
 }

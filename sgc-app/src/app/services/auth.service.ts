@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
+import { jwtDecode } from 'jwt-decode';
 
 export interface User {
   id: number;
@@ -34,7 +35,7 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private router: Router
-  ) {}
+  ) { }
 
   // Login
   login(credentials: LoginRequest): Observable<any> {
@@ -48,6 +49,10 @@ export class AuthService {
   // Registro
   register(userData: RegisterRequest): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth/register`, userData);
+  }
+
+  findOne(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/users/${id}`);
   }
 
   private setSession(response: any): void {
@@ -75,6 +80,16 @@ export class AuthService {
     } catch {
       return null;
     }
+  }
+
+  getCurrentUser(): any {
+    const token = this.getToken();
+    if (token) {
+      const decoded: any = jwtDecode(token);
+      return decoded;
+    }
+
+    return null;
   }
 
   isLoggedIn(): boolean {
