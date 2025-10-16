@@ -11,11 +11,8 @@ import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Request, StatusRequest } from '../../shared/models/request.model';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
-import { SupplierStatus } from '../../shared/models/supplier.model';
 import { StatusComponent } from '../../shared/components/status/status.component';
 import { RequestService } from '../../services/request.service';
-import { SupplierService } from '../../services/supplier.service';
-import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-requests-list',
