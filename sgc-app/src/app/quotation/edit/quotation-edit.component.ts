@@ -152,15 +152,6 @@ export class QuotationEditComponent implements OnInit {
           suppliers: quotation.suppliers,
         });
 
-        // const supplier = quotation.supplier;
-        // if (supplier && !this.allSuppliers.find(s => s.id === supplier.id)) {
-        //   this.allSuppliers.push(supplier);
-        // }
-
-        // if (quotation.supplier) {
-        //   this.supplierControl.setValue(quotation.supplier);
-        // }
-
         const itensFormArray = this.fb.array(
           quotation.itens.map(item => this.fb.group({
             item: item.item,
