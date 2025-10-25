@@ -1,3 +1,4 @@
+import { User } from "../../services/auth.service";
 import { Item } from "./item.model";
 import { Supplier } from "./supplier.model";
 
@@ -21,7 +22,7 @@ export interface RequestItem {
 export interface Request {
     id?: number;
     code: string;
-    creator: string;
+    creator: User;
     createdAt: Date;
     description: string;
     deliveredAt?: Date;

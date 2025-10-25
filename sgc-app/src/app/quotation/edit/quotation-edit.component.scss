@@ -221,6 +221,27 @@ $border-color: #ddd;
   }
 }
 
+.proposal-block {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.proposal-header {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.proposal-itens {
+  margin-left: 1rem;
+  border-left: 3px solid #ccc;
+  padding-left: 1rem;
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
   .form-row {

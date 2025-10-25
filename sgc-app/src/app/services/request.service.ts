@@ -45,9 +45,10 @@ export class RequestService {
         );
     }
 
-    findAll(page: number = 1, limit: number = 10, search: string = ''): Observable<any> {
+    findAll(page: number = 1, limit: number = 10, search: string = '', supplierId?: number | null): Observable<any> {
         const params: any = { page, limit };
         if (search) params.search = search;
+        if (supplierId) params.supplierId = supplierId;
 
         return this.http.get(`${this.apiUrl}/requests`, { params });
     }

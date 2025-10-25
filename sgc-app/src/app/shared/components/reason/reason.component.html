@@ -1,0 +1,26 @@
+<div class="reject-dialog-container">
+  <div class="reject-dialog-card">
+    <h1 class="reject-dialog-title">Recusar Processo</h1>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="reject-dialog-form">
+      <div class="form-group">
+        <label for="reason">Motivo da recusa</label>
+        <textarea id="reason" formControlName="reason" placeholder="Descreva o motivo da recusa..."
+          [class.is-invalid]="form.get('reason')?.touched && form.get('reason')?.invalid" rows="4"></textarea>
+
+        @if (form.get('reason')?.touched && form.get('reason')?.invalid) {
+        <div class="error-message">
+          <span>O motivo é obrigatório.</span>
+        </div>
+        }
+      </div>
+
+      <div class="dialog-buttons">
+        <button type="button" class="cancel-button" (click)="onCancel()">Cancelar</button>
+        <button type="submit" class="confirm-button" [disabled]="form.invalid">
+          Confirmar Recusa
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

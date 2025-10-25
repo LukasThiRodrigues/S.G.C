@@ -1,16 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { Quotation, StatusQuotation } from '../../shared/models/quotation.model';
-import { Supplier, SupplierStatus } from '../../shared/models/supplier.model';
+import { Supplier } from '../../shared/models/supplier.model';
 import { AuthService } from '../../services/auth.service';
 import { Item } from '../../shared/models/item.model';
 import { ItemService } from '../../services/item.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { SupplierService } from '../../services/supplier.service';
 import { QuotationService } from '../../services/quotation.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ProposalService } from '../../services/proposal.service';
+import { StatusRequest } from '../../shared/models/request.model';
+import { RequestService } from '../../services/request.service';
 
 @Component({
   selector: 'app-quotation-edit',
@@ -29,6 +33,9 @@ export class QuotationEditComponent implements OnInit {
   limit: number = 10;
   allSuppliers: Supplier[] = [];
   allItens: Item[] = [];
+  isSupplier: boolean = false;
+  supplierId: number | null = null;
+  hasProposal = false;
 
   constructor(
     private fb: FormBuilder,
@@ -37,7 +44,10 @@ export class QuotationEditComponent implements OnInit {
     private authService: AuthService,
     private itemService: ItemService,
     private supplierService: SupplierService,
-    private quotationService: QuotationService
+    private quotationService: QuotationService,
+    private proposalService: ProposalService,
+    private requestService: RequestService,
+    private dialog: MatDialog,
   ) {
     this.quotationForm = this.createForm();
   }
@@ -49,6 +59,12 @@ export class QuotationEditComponent implements OnInit {
       this.authService.findOne(user.sub).subscribe(user => {
         this.quotationForm.get('creator')?.patchValue(user);
         this.quotationForm.get('creator')?.disable();
+
+        if (user.supplierId) {
+          this.quotationForm.get('description')?.disable();
+          this.isSupplier = true;
+          this.supplierId = user.supplierId;
+        }
       });
 
       if (params['id']) {
@@ -73,6 +89,7 @@ export class QuotationEditComponent implements OnInit {
       suppliers: this.fb.array([this.createSupplierForm()]),
       status: [StatusQuotation.Pending, Validators.required],
       itens: this.fb.array([this.createItemForm()]),
+      proposals: this.fb.array([this.createProposalForm()]),
       total: [0]
     });
   }
@@ -80,6 +97,7 @@ export class QuotationEditComponent implements OnInit {
   private createItemForm(): FormGroup {
     return this.fb.group({
       item: ['', Validators.required],
+      itemId: null,
       unit: ['', Validators.required],
       quantity: [1, [Validators.required, Validators.min(1)]],
       price: [0, [Validators.required, Validators.min(0)]],
@@ -94,6 +112,16 @@ export class QuotationEditComponent implements OnInit {
     });
   }
 
+  private createProposalForm(): FormGroup {
+    return this.fb.group({
+      id: null,
+      createdAt: [new Date().toISOString().substring(0, 10), Validators.required],
+      supplier: null,
+      itens: this.fb.array([this.createItemForm()]),
+      total: 0,
+    });
+  }
+
   get itens(): FormArray {
     return this.quotationForm.get('itens') as FormArray;
   }
@@ -104,6 +132,15 @@ export class QuotationEditComponent implements OnInit {
 
   get creator(): FormGroup {
     return this.quotationForm.get('creator') as FormGroup;
+  }
+
+  get proposals(): FormArray {
+    return this.quotationForm.get('proposals') as FormArray;
+  }
+
+  public getProposalItens(proposalIndex: number): FormArray {
+    const proposalGroup = this.proposals.at(proposalIndex) as FormGroup;
+    return proposalGroup.get('itens') as FormArray;
   }
 
   public addItem() {
@@ -149,13 +186,12 @@ export class QuotationEditComponent implements OnInit {
         this.quotationForm.patchValue({
           ...quotation,
           createdAt: new Date(quotation.createdAt).toISOString().substring(0, 10),
-          suppliers: quotation.suppliers,
         });
 
         const itensFormArray = this.fb.array(
           quotation.itens.map(item => this.fb.group({
             item: item.item,
-            unit: item.unit,
+            unit: item.item.unit,
             quantity: item.quantity,
             price: item.price,
             total: item.total
@@ -163,10 +199,57 @@ export class QuotationEditComponent implements OnInit {
         );
         this.quotationForm.setControl('itens', itensFormArray);
 
+        const suppliersFormArray = this.fb.array(
+          quotation.suppliers.map(supplier => this.fb.group({
+            supplier: supplier.supplier,
+            cnpj: supplier.supplier.cnpj
+          }))
+        );
+        this.quotationForm.setControl('suppliers', suppliersFormArray);
+
+        const proposalsFormArray = this.fb.array(
+          quotation.proposals.map(proposal => {
+            const proposalItensFA = this.fb.array(
+              proposal.itens.map(proposalItem => this.fb.group({
+                item: proposalItem.item.item,
+                itemId: proposalItem.item.id,
+                unit: proposalItem.item?.unit,
+                quantity: proposalItem.quantity,
+                price: proposalItem.price,
+                total: proposalItem.total
+              }))
+            );
+
+            return this.fb.group({
+              id: proposal.id,
+              createdAt: new Date(proposal.createdAt).toISOString().substring(0, 10),
+              supplier: proposal.supplier,
+              itens: proposalItensFA,
+              total: proposal.total
+            });
+          })
+        );
+        this.quotationForm.setControl('proposals', proposalsFormArray);
+
+        this.hasProposal = quotation.proposals && quotation.proposals.length > 0;
+
+        if (this.hasProposal) {
+          this.quotationForm.get('description')?.disable();
+        }
+
         this.quotationForm.get('createdAt')?.disable();
         this.quotationForm.get('code')?.disable();
         this.quotationForm.get('itens')?.disable();
         this.quotationForm.get('suppliers')?.disable();
+        this.quotationForm.get('proposals')?.disable();
+
+        if (this.isSupplier) {
+          const itensFormArray = this.quotationForm.get('itens') as FormArray;
+          itensFormArray.controls.forEach(control => {
+            control.get('quantity')?.enable();
+            control.get('price')?.enable();
+          });
+        }
       }
     });
   }
@@ -175,22 +258,33 @@ export class QuotationEditComponent implements OnInit {
     if (this.quotationForm.valid) {
       const formData = this.quotationForm.getRawValue();
 
-      if (!this.isEditMode) {
-        formData.status = StatusQuotation.Pending;
+      if (this.isSupplier) {
+        formData.quotationId = this.quotationId;
+        formData.supplierId = this.supplierId;
 
-        this.quotationService.create(formData).subscribe(quotation => {
-          if (quotation) {
+        this.proposalService.create(formData).subscribe(proposal => {
+          if (proposal) {
             this.router.navigate(['/quotations']);
           }
         });
       } else {
-        formData.id = this.quotationId;
+        if (!this.isEditMode) {
+          formData.status = StatusQuotation.Pending;
 
-        this.quotationService.update(formData).subscribe(quotation => {
-          if (quotation) {
-            this.router.navigate(['/quotations']);
-          }
-        });
+          this.quotationService.create(formData).subscribe(quotation => {
+            if (quotation) {
+              this.router.navigate(['/quotations']);
+            }
+          });
+        } else {
+          formData.id = this.quotationId;
+
+          this.quotationService.update(formData).subscribe(quotation => {
+            if (quotation) {
+              this.router.navigate(['/quotations']);
+            }
+          });
+        }
       }
     }
   }
@@ -249,5 +343,32 @@ export class QuotationEditComponent implements OnInit {
     itemGroup.get('unit')?.disable();
 
     this.calculateTotalItem(index);
+  }
+
+  public generateRequest(index: number) {
+    const proposal = this.proposals.at(index).value;
+    const user = this.authService.getCurrentUser();
+
+    this.authService.findOne(user.sub).subscribe(user => {
+      const requestForm = {
+        code: '',
+        createdAt: new Date(),
+        creator: user,
+        description: '',
+        reason: null,
+        supplier: proposal.supplier,
+        status: StatusRequest.Draft,
+        itens: proposal.itens,
+        total: proposal.total,
+        quotationId: this.quotationId,
+        proposalId: proposal.id
+      }
+
+      this.requestService.create(requestForm).subscribe(request => {
+        if (request) {
+          this.router.navigate(['/request/edit/', request.id]);
+        }
+      });
+    });
   }
 }

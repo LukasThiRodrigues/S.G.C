@@ -9,10 +9,10 @@
         <button class="nav-button" (click)="quotations()" [class.active]="isActive(['/quotations', '/quotation/edit'])">
           Cotações
         </button>
-        <button class="nav-button" (click)="suppliers()" [class.active]="isActive(['/suppliers', '/supplier/edit'])">
+        <button class="nav-button" (click)="suppliers()" [class.active]="isActive(['/suppliers', '/supplier/edit'])" *ngIf="!isSupplier">
           Fornecedores
         </button>
-        <button class="nav-button" (click)="items()" [class.active]="isActive(['/items', '/item/edit'])">
+        <button class="nav-button" (click)="items()" [class.active]="isActive(['/items', '/item/edit'])" *ngIf="!isSupplier">
           Itens
         </button>
         <button class="nav-button" (click)="profile()" [class.active]="isActive(['/profile'])">
