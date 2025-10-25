@@ -4,13 +4,15 @@ import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Va
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
-import { Supplier, SupplierStatus } from '../../shared/models/supplier.model';
+import { Supplier } from '../../shared/models/supplier.model';
 import { SupplierService } from '../../services/supplier.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { Item } from '../../shared/models/item.model';
 import { ItemService } from '../../services/item.service';
 import { RequestService } from '../../services/request.service';
 import { AuthService } from '../../services/auth.service';
+import { MatDialog } from '@angular/material/dialog';
+import { RejectReasonDialogComponent } from '../../shared/components/reason/reason.component';
 
 @Component({
   selector: 'app-request-edit',
@@ -30,6 +32,7 @@ export class RequestEditComponent implements OnInit {
   allSuppliers: Supplier[] = [];
   allItens: Item[] = [];
   supplierControl;
+  isSupplier: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -39,6 +42,7 @@ export class RequestEditComponent implements OnInit {
     private supplierService: SupplierService,
     private itemService: ItemService,
     private authService: AuthService,
+    private dialog: MatDialog,
   ) {
     this.requestForm = this.createForm();
     this.supplierControl = new FormControl<Supplier | null>(null, Validators.required);
@@ -51,6 +55,11 @@ export class RequestEditComponent implements OnInit {
       this.authService.findOne(user.sub).subscribe(user => {
         this.requestForm.get('creator')?.patchValue(user);
         this.requestForm.get('creator')?.disable();
+
+        if (user.supplierId) {
+          this.requestForm.get('description')?.disable();
+          this.isSupplier = true;
+        }
       });
 
       if (params['id']) {
@@ -70,6 +79,7 @@ export class RequestEditComponent implements OnInit {
       createdAt: [new Date().toISOString().substring(0, 10), Validators.required],
       description: null,
       deliveredAt: [''],
+      reason: null,
       supplier: this.fb.group({
         id: null,
         name: ['', Validators.required],
@@ -171,7 +181,12 @@ export class RequestEditComponent implements OnInit {
         this.requestForm.get('deliveredAt')?.disable();
         this.requestForm.get('code')?.disable();
         this.requestForm.get('itens')?.disable();
+        this.requestForm.get('reason')?.disable();
         this.supplierControl.disable();
+
+        if (this.requestForm.get('status')?.value === StatusRequest.Draft) {
+          this.requestForm.get('code')?.enable();
+        }
       }
     });
   }
@@ -191,6 +206,10 @@ export class RequestEditComponent implements OnInit {
       } else {
         formData.id = this.requestId;
 
+        if (this.isSupplier) {
+          formData.status = StatusRequest.SupplierAccepted
+        }
+
         this.requestService.update(formData).subscribe(request => {
           if (request) {
             this.router.navigate(['/requests']);
@@ -201,7 +220,28 @@ export class RequestEditComponent implements OnInit {
   }
 
   public cancel() {
-    this.router.navigate(['/requests']);
+    if (this.canRefuse()) {
+      const dialogRef = this.dialog.open(RejectReasonDialogComponent, {
+        width: '500px',
+      });
+
+      dialogRef.afterClosed().subscribe(reason => {
+        if (reason) {
+          const formData = this.requestForm.getRawValue();
+          formData.id = this.requestId;
+          formData.status = StatusRequest.SupplierRejected;
+          formData.reason = reason
+          this.requestService.update(formData).subscribe({
+            next: () => {
+              this.router.navigate(['/requests']);
+            },
+            error: err => console.error('Erro ao recusar pedido', err)
+          });
+        }
+      });
+    } else {
+      this.router.navigate(['/requests']);
+    }
   }
 
   public searchSupplier(event: Event) {
@@ -249,5 +289,9 @@ export class RequestEditComponent implements OnInit {
     itemGroup.get('unit')?.disable();
 
     this.calculateTotalItem(index);
+  }
+
+  public canRefuse(): boolean {
+    return this.isSupplier && this.requestForm.get('status')?.value == 'pending';
   }
 }

@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
-import { Quotation } from '../shared/models/quotation.model';
+import { Proposal } from '../shared/models/proposal.model';
 
 @Injectable({
     providedIn: 'root'
 })
-export class QuotationService {
+export class ProposalService {
     private apiUrl = 'http://localhost:3000';
 
     constructor(
@@ -15,46 +15,45 @@ export class QuotationService {
         private router: Router
     ) { }
 
-    create(body: Quotation): Observable<any> {
-        return this.http.post(`${this.apiUrl}/quotations`, body).pipe(
+    create(body: Proposal): Observable<any> {
+        return this.http.post(`${this.apiUrl}/proposals`, body).pipe(
             tap(response => {
                 if (response) {
-                    this.router.navigate(['/quotations']);
+                    this.router.navigate(['/proposals']);
                 }
             })
         );
     }
 
-    update(body: Quotation): Observable<any> {
-        return this.http.put(`${this.apiUrl}/quotations/${body.id}`, body).pipe(
+    update(body: Proposal): Observable<any> {
+        return this.http.put(`${this.apiUrl}/proposals/${body.id}`, body).pipe(
             tap(response => {
                 if (response) {
-                    this.router.navigate(['/quotations']);
+                    this.router.navigate(['/proposals']);
                 }
             })
         );
     }
 
     delete(id: number): Observable<any> {
-        return this.http.delete(`${this.apiUrl}/quotations/${id}`).pipe(
+        return this.http.delete(`${this.apiUrl}/proposals/${id}`).pipe(
             tap(response => {
                 if (response) {
-                    this.router.navigate(['/quotations']);
+                    this.router.navigate(['/proposals']);
                 }
             })
         );
     }
 
-    findAll(page: number = 1, limit: number = 10, search: string = '', supplierId?: number | null): Observable<any> {
+    findAll(page: number = 1, limit: number = 10, supplierId?: number | null): Observable<any> {
         const params: any = { page, limit };
-        if (search) params.search = search;
         if (supplierId) params.supplierId = supplierId;
 
-        return this.http.get(`${this.apiUrl}/quotations`, { params });
+        return this.http.get(`${this.apiUrl}/proposals`, { params });
     }
 
     findOne(id: number): Observable<any> {
-        return this.http.get(`${this.apiUrl}/quotations/${id}`);
+        return this.http.get(`${this.apiUrl}/proposals/${id}`);
     }
 
 }

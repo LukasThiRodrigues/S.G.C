@@ -13,6 +13,7 @@ import { NavbarComponent } from '../../shared/components/navbar/navbar.component
 import { Quotation, StatusQuotation } from '../../shared/models/quotation.model';
 import { StatusComponent } from '../../shared/components/status/status.component';
 import { QuotationService } from '../../services/quotation.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-quotations-list',
@@ -41,14 +42,27 @@ export class QuotationListComponent implements OnInit {
   searchText: string = '';
   page: number = 1;
   limit: number = 10;
+  isSupplier: boolean = false;
+  supplierId = null;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private router: Router, private service: QuotationService) { }
+  constructor(
+    private router: Router,
+    private service: QuotationService,
+    private authService: AuthService,
+  ) { }
 
   public ngOnInit() {
-    this.loadQuotations();
+    const user = this.authService.getCurrentUser();
+
+    this.authService.findOne(user.sub).subscribe(user => {
+      this.isSupplier = user.supplierId ? true : false;
+      this.supplierId = this.isSupplier ? user.supplierId : null;
+
+      this.loadQuotations();
+    });
   }
 
   public ngAfterViewInit() {
@@ -82,7 +96,7 @@ export class QuotationListComponent implements OnInit {
   }
 
   private loadQuotations() {
-    this.service.findAll(this.page, this.limit, this.searchText).subscribe({
+    this.service.findAll(this.page, this.limit, this.searchText, this.supplierId).subscribe({
       next: (res: any) => {
         this.dataSource.data = res.quotations;
 

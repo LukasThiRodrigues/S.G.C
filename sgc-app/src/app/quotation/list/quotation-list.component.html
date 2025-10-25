@@ -4,7 +4,7 @@
   <div class="form-content">
     <div class="header-actions">
       <h1 class="page-title">Cotações</h1>
-      <button mat-raised-button 
+      <button mat-raised-button *ngIf="!isSupplier"
         style="background-color: #46b438; color: white;" 
         (click)="create()">
         <mat-icon style="color: white !important;">add</mat-icon>
@@ -62,7 +62,7 @@
                 <button mat-icon-button color="primary" (click)="edit(quotation)" title="Editar">
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-icon-button color="warn" (click)="cancel(quotation)" title="Cancelar">
+                <button mat-icon-button color="warn" (click)="cancel(quotation)" title="Cancelar" *ngIf="quotation.status !== 'canceled' && !isSupplier">
                   <mat-icon>close</mat-icon>
                 </button>
               </td>

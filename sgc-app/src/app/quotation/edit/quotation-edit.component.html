@@ -2,8 +2,11 @@
   <app-navbar></app-navbar>
 
   <div class="form-card">
-    <h1 class="form-title">
+    <h1 class="form-title" *ngIf="!isSupplier">
       {{ isEditMode ? 'Editar Cotação' : 'Nova Cotação' }}
+    </h1>
+    <h1 class="form-title" *ngIf="isSupplier">
+      Responder Cotação
     </h1>
 
     <form [formGroup]="quotationForm" (ngSubmit)="onSubmit()">
@@ -29,18 +32,20 @@
         <input type="text" formControlName="description" placeholder="Descrição da cotação">
       </div>
 
-      <div class="itens-section">
+      <div class="itens-section" *ngIf="!isSupplier">
         <div class="section-header">
           <h3>Fornecedores</h3>
-          <button type="button" class="btn-add" (click)="addSupplier()">+ Adicionar Fornecedor</button>
+          <button type="button" class="btn-add" (click)="addSupplier()" *ngIf="!hasProposal">+ Adicionar
+            Fornecedor</button>
         </div>
 
         <div formArrayName="suppliers">
           <div class="item-row" *ngFor="let supplier of suppliers.controls; let i = index" [formGroupName]="i">
             <div class="item-produto">
               <label>Fornecedor </label>
-              <input type="text" formControlName="supplier" placeholder="Fornececdor" matInput [matAutocomplete]="supplierAuto"
-                (focus)="searchSupplier($event)" (input)="searchSupplier($event)" [disabled]="!isEditMode">
+              <input type="text" formControlName="supplier" placeholder="Fornececdor" matInput
+                [matAutocomplete]="supplierAuto" (focus)="searchSupplier($event)" (input)="searchSupplier($event)"
+                [disabled]="!isEditMode">
               <mat-autocomplete #supplierAuto="matAutocomplete" autoActiveFirstOption [displayWith]="displaySupplierFn"
                 (optionSelected)="onSupplierSelected(i, $event.option.value)">
                 <mat-option *ngFor="let supplier of allSuppliers" [value]="supplier">
@@ -55,7 +60,7 @@
             </div>
 
             <div class="item-actions">
-              <button type="button" class="btn-remove" (click)="removeSupplier(i)" 
+              <button type="button" class="btn-remove" (click)="removeSupplier(i)"
                 [disabled]="suppliers.length === 1">×</button>
             </div>
           </div>
@@ -65,7 +70,8 @@
       <div class="itens-section">
         <div class="section-header">
           <h3>Itens</h3>
-          <button type="button" class="btn-add" (click)="addItem()">+ Adicionar Item</button>
+          <button type="button" class="btn-add" (click)="addItem()" *ngIf="!isSupplier && !hasProposal">+ Adicionar
+            Item</button>
         </div>
 
         <div formArrayName="itens">
@@ -89,14 +95,14 @@
 
             <div class="item-quantidade">
               <label>Quantidade</label>
-              <input type="number" formControlName="quantity" min="1" 
-                (change)="calculateTotalItem(i)" placeholder="Qtd">
+              <input type="number" formControlName="quantity" min="1" (change)="calculateTotalItem(i)"
+                placeholder="Qtd">
             </div>
 
             <div class="item-preco">
               <label>Preço</label>
-              <input type="number" formControlName="price" min="0" step="0.01"
-                (change)="calculateTotalItem(i)" placeholder="R$ 0,00">
+              <input type="number" formControlName="price" min="0" step="0.01" (change)="calculateTotalItem(i)"
+                placeholder="R$ 0,00">
             </div>
 
             <div class="item-total">
@@ -104,12 +110,68 @@
             </div>
 
             <div class="item-actions">
-              <button type="button" class="btn-remove" (click)="removeItem(i)" 
+              <button type="button" class="btn-remove" (click)="removeItem(i)"
                 [disabled]="itens.length === 1">×</button>
             </div>
           </div>
         </div>
       </div>
+
+      <div class="itens-section" *ngIf="!isSupplier">
+        <div class="section-header">
+          <h3>Propostas</h3>
+        </div>
+
+        <div formArrayName="proposals">
+          <div class="proposal-block" *ngFor="let proposal of proposals.controls; let p = index" [formGroupName]="p">
+
+            <div class="proposal-header">
+              <p>
+                {{ proposal.get('supplier')?.value?.name }} -
+                {{ proposal.get('supplier')?.value?.cnpj }}
+              </p>
+              <button type="button" class="btn-add" (click)="generateRequest(p)">Gerar Pedido</button>
+            </div>
+
+            <div formArrayName="itens" class="proposal-itens">
+              <div class="item-row" *ngFor="let item of getProposalItens(p).controls; let i = index"
+                [formGroupName]="i">
+
+                <div class="item-produto">
+                  <label>Item</label>
+                  <input type="text" formControlName="item" placeholder="Item">
+                </div>
+
+                <div class="item-unidade">
+                  <label>Unidade</label>
+                  <input type="text" formControlName="unit" placeholder="Unidade">
+                </div>
+
+                <div class="item-quantidade">
+                  <label>Quantidade</label>
+                  <input type="number" formControlName="quantity" min="1">
+                </div>
+
+                <div class="item-preco">
+                  <label>Preço</label>
+                  <input type="number" formControlName="price" min="0" step="0.01">
+                </div>
+
+                <div class="item-total">
+                  <strong>
+                    R$ {{ item.get('quantity')?.value * item.get('price')?.value | number:'1.2-2' }}
+                  </strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="proposal-total">
+              <strong>Total: R$ {{ proposal.get('total')?.value | number:'1.2-2' }}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
 
       <div class="total-section">
         <div class="total-label">Total da Cotação:</div>
@@ -118,8 +180,12 @@
 
       <div class="form-actions">
         <button type="button" class="btn-cancelar" (click)="cancel()">Cancelar</button>
-        <button type="submit" class="btn-salvar" [disabled]="quotationForm.invalid">
+        <button type="submit" class="btn-salvar" [disabled]="quotationForm.invalid" *ngIf="!isSupplier && !hasProposal">
           {{ isEditMode ? 'Atualizar' : 'Criar' }} Cotação
+        </button>
+        <button type="submit" class="btn-salvar" [disabled]="quotationForm.get('status')?.value != 'pending'"
+          *ngIf="isSupplier">
+          Enviar Proposta
         </button>
       </div>
     </form>

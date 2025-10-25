@@ -13,6 +13,7 @@ import { Request, StatusRequest } from '../../shared/models/request.model';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { StatusComponent } from '../../shared/components/status/status.component';
 import { RequestService } from '../../services/request.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-requests-list',
@@ -41,6 +42,8 @@ export class RequestListComponent implements OnInit {
   searchText: string = '';
   page: number = 1;
   limit: number = 10;
+  isSupplier: boolean = false;
+  supplierId = null;
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -48,10 +51,18 @@ export class RequestListComponent implements OnInit {
   constructor(
     private router: Router,
     private service: RequestService,
+    private authService: AuthService,
   ) {}
 
   public ngOnInit() {
-    this.loadRequests();
+    const user = this.authService.getCurrentUser();
+
+    this.authService.findOne(user.sub).subscribe(user => {
+      this.isSupplier = user.supplierId ? true : false;
+      this.supplierId = this.isSupplier ? user.supplierId : null;
+
+      this.loadRequests();
+    });
   }
 
   public ngAfterViewInit() {
@@ -85,7 +96,7 @@ export class RequestListComponent implements OnInit {
   }
 
   private loadRequests() {
-    this.service.findAll(this.page, this.limit, this.searchText).subscribe({
+    this.service.findAll(this.page, this.limit, this.searchText, this.supplierId).subscribe({
       next: (res: any) => {
         this.dataSource.data = res.requests;
 
