@@ -4,7 +4,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Va
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
-import { Supplier } from '../../shared/models/supplier.model';
+import { Supplier, SupplierStatus } from '../../shared/models/supplier.model';
 import { SupplierService } from '../../services/supplier.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { Item } from '../../shared/models/item.model';
@@ -273,7 +273,7 @@ export class RequestEditComponent implements OnInit {
 
     this.supplierService.findAll(this.page, this.limit, this.searchTextSupplier).subscribe({
       next: (res: any) => {
-        this.allSuppliers = res.suppliers;
+        this.allSuppliers = res.suppliers.filter((supplier: Supplier) => ![SupplierStatus.Invited, SupplierStatus.Inactive].includes(supplier.status));
       }
     });
   }
