@@ -29,5 +29,6 @@ export interface Request {
     supplier: Supplier;
     status: StatusRequest;
     itens: RequestItem[];
+    quotationId?: number;
     total: number;
 }
