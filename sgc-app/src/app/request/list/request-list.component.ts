@@ -37,7 +37,7 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./request-list.component.scss']
 })
 export class RequestListComponent implements OnInit {
-  displayedColumns: string[] = ['code', 'creator', 'supplier', 'createdAt', 'description', 'status', 'total', 'actions'];
+  displayedColumns: string[] = ['code', 'creator', 'supplier', 'createdAt', 'deliveredAt', 'description', 'status', 'total', 'actions'];
   dataSource = new MatTableDataSource<Request>();
   searchText: string = '';
   page: number = 1;
@@ -91,6 +91,17 @@ export class RequestListComponent implements OnInit {
     })
   }
 
+  public finish(request: Request) {
+    request.status = StatusRequest.Delivered;
+    request.deliveredAt = new Date();
+
+    this.service.update(request).subscribe({
+      next: () => {
+        this.loadRequests();
+      }
+    })
+  }
+
   public create() {
     this.router.navigate(['/request/edit']);
   }
@@ -113,6 +124,10 @@ export class RequestListComponent implements OnInit {
         console.error('Erro ao carregar pedidos:', err);
       }
     });
+  }
+
+  public canCancel(request: Request): boolean {
+    return ![StatusRequest.Canceled, StatusRequest.Delivered].includes(request.status);
   }
 
 }

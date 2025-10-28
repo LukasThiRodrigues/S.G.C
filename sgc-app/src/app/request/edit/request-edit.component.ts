@@ -33,6 +33,7 @@ export class RequestEditComponent implements OnInit {
   allItens: Item[] = [];
   supplierControl;
   isSupplier: boolean = false;
+  hasQuotation: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -91,6 +92,10 @@ export class RequestEditComponent implements OnInit {
       }),
       status: null,
       itens: this.fb.array([this.createItemForm()]),
+      quotation: this.fb.group({
+        id: null,
+        code: ''
+      }),
       total: [0]
     });
   }
@@ -115,6 +120,10 @@ export class RequestEditComponent implements OnInit {
 
   get creator(): FormGroup {
     return this.requestForm.get('creator') as FormGroup;
+  }
+
+  get quotation(): FormGroup {
+    return this.requestForm.get('quotation') as FormGroup;
   }
 
   public addItem() {
@@ -150,6 +159,7 @@ export class RequestEditComponent implements OnInit {
         this.requestForm.patchValue({
           ...request,
           createdAt: new Date(request.createdAt).toISOString().substring(0, 10),
+          deliveredAt: request.deliveredAt ? new Date(request.deliveredAt).toISOString().substring(0, 10) : null,
           supplier: {
             id: request.supplier?.id ?? null,
             name: request.supplier?.name ?? '',
@@ -187,6 +197,15 @@ export class RequestEditComponent implements OnInit {
         if (this.requestForm.get('status')?.value === StatusRequest.Draft) {
           this.requestForm.get('code')?.enable();
         }
+
+        if (request.quotationId) {
+          this.requestForm.get('quotation')?.disable();
+          this.hasQuotation = true;
+        }
+
+        if (!this.canEdit()) {
+          this.requestForm.get('description')?.disable();
+        }
       }
     });
   }
@@ -208,6 +227,10 @@ export class RequestEditComponent implements OnInit {
 
         if (this.isSupplier) {
           formData.status = StatusRequest.SupplierAccepted
+        }
+
+        if (formData.status === StatusRequest.Draft) {
+          formData.status = StatusRequest.Pending
         }
 
         this.requestService.update(formData).subscribe(request => {
@@ -292,6 +315,10 @@ export class RequestEditComponent implements OnInit {
   }
 
   public canRefuse(): boolean {
-    return this.isSupplier && this.requestForm.get('status')?.value == 'pending';
+    return this.isSupplier && this.requestForm.get('status')?.value == StatusRequest.Pending;
+  }
+
+  public canEdit(): boolean {
+    return [StatusRequest.Draft, StatusRequest.Pending].includes(this.requestForm.get('status')?.value);
   }
 }

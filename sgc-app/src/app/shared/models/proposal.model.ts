@@ -1,4 +1,5 @@
 import { Item } from "./item.model";
+import { Request } from "./request.model";
 import { Supplier } from "./supplier.model";
 
 export interface ProposalItem {
@@ -14,5 +15,6 @@ export interface Proposal {
     createdAt: Date;
     supplier: Supplier;
     itens: ProposalItem[];
+    request?: Request;
     total: number;
 }

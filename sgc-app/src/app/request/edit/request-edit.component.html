@@ -44,6 +44,11 @@
           <label>Criador</label>
           <input type="text" formControlName="name" placeholder="Nome do criador" matInput>
         </div>
+
+        <div class="form-group" [formGroup]="quotation" *ngIf="hasQuotation">
+          <label>Cotação</label>
+          <input type="text" formControlName="code" matInput>
+        </div>
       </div>
 
       <div class="form-group">
@@ -112,7 +117,7 @@
 
       <div class="form-actions">
         <button type="button" class="btn-cancelar" (click)="cancel()">{{ canRefuse() ? 'Recusar' : 'Voltar' }}</button>
-        <button type="submit" class="btn-salvar" [disabled]="requestForm.invalid" *ngIf="!isSupplier">
+        <button type="submit" class="btn-salvar" [disabled]="requestForm.invalid || !canEdit()" *ngIf="!isSupplier">
           {{ isEditMode ? 'Atualizar' : 'Criar' }} Pedido
         </button>
         <button type="submit" class="btn-salvar" [disabled]="requestForm.get('status')?.value != 'pending'" *ngIf="isSupplier">

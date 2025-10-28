@@ -118,6 +118,7 @@ export class QuotationEditComponent implements OnInit {
       createdAt: [new Date().toISOString().substring(0, 10), Validators.required],
       supplier: null,
       itens: this.fb.array([this.createItemForm()]),
+      request: null,
       total: 0,
     });
   }
@@ -135,7 +136,23 @@ export class QuotationEditComponent implements OnInit {
   }
 
   get proposals(): FormArray {
-    return this.quotationForm.get('proposals') as FormArray;
+    const allProposals = this.quotationForm.get('proposals') as FormArray;
+
+    if (!this.isSupplier) {
+      return allProposals;
+    }
+
+    const filtered = allProposals.controls.filter(control => {
+      const proposal = control.value;
+      return proposal.supplier?.id === this.supplierId;
+    });
+
+    return new FormArray(filtered);
+  }
+
+
+  get request(): FormArray {
+    return this.proposals.get('request') as FormArray;
   }
 
   public getProposalItens(proposalIndex: number): FormArray {
@@ -225,6 +242,7 @@ export class QuotationEditComponent implements OnInit {
               createdAt: new Date(proposal.createdAt).toISOString().substring(0, 10),
               supplier: proposal.supplier,
               itens: proposalItensFA,
+              request: proposal.request,
               total: proposal.total
             });
           })
@@ -250,6 +268,20 @@ export class QuotationEditComponent implements OnInit {
             control.get('price')?.enable();
           });
         }
+
+        if (quotation.proposals.length > 0) {
+          for (const proposal of quotation.proposals) {
+            const isSupplierLogged = proposal.supplier.id === this.supplierId;
+
+            if (this.isSupplier && isSupplierLogged) {
+              const itensFormArray = this.quotationForm.get('itens') as FormArray;
+              itensFormArray.controls.forEach(control => {
+                control.get('quantity')?.disable();
+                control.get('price')?.disable();
+              });
+            }
+          }
+        }
       }
     });
   }
@@ -267,6 +299,17 @@ export class QuotationEditComponent implements OnInit {
             this.router.navigate(['/quotations']);
           }
         });
+
+        if (formData.suppliers.length === formData.proposals.length) {
+          formData.id = this.quotationId;
+          formData.status = StatusQuotation.InDecision;
+
+          this.quotationService.update(formData).subscribe(quotation => {
+            if (quotation) {
+              this.router.navigate(['/quotations']);
+            }
+          });
+        }
       } else {
         if (!this.isEditMode) {
           formData.status = StatusQuotation.Pending;
@@ -371,4 +414,21 @@ export class QuotationEditComponent implements OnInit {
       });
     });
   }
+
+  public hasRequest(index: number): boolean {
+    const proposal = this.proposals.at(index).value;
+
+    return proposal.request?.id ? true : false;
+  }
+
+  public hasSupplierSentProposal(): boolean {
+    const proposals = this.quotationForm.get('proposals')?.value || [];
+
+    if (!this.isSupplier || proposals.length === 0) {
+      return false;
+    }
+
+    return proposals.some((proposal: any) => proposal.supplier?.id === this.supplierId);
+  }
+
 }
