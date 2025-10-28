@@ -4,7 +4,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { Quotation, StatusQuotation } from '../../shared/models/quotation.model';
-import { Supplier } from '../../shared/models/supplier.model';
+import { Supplier, SupplierStatus } from '../../shared/models/supplier.model';
 import { AuthService } from '../../services/auth.service';
 import { Item } from '../../shared/models/item.model';
 import { ItemService } from '../../services/item.service';
@@ -342,7 +342,7 @@ export class QuotationEditComponent implements OnInit {
 
     this.supplierService.findAll(this.page, this.limit, this.searchTextSupplier).subscribe({
       next: (res: any) => {
-        this.allSuppliers = res.suppliers;
+        this.allSuppliers = res.suppliers.filter((supplier: Supplier) => ![SupplierStatus.Invited, SupplierStatus.Inactive].includes(supplier.status));
       }
     });
   }

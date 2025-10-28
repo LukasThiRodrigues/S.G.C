@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { Supplier, SupplierStatus } from '../../shared/models/supplier.model';
 import { SupplierService } from '../../services/supplier.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-supplier-edit',
@@ -22,13 +23,20 @@ export class SupplierEditComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
-    private service: SupplierService
+    private service: SupplierService,
+    private authService: AuthService,
   ) {
     this.supplierForm = this.createForm();
   }
 
   public ngOnInit() {
     this.route.params.subscribe(params => {
+      const user = this.authService.getCurrentUser();
+
+      this.authService.findOne(user.sub).subscribe(user => {
+        this.supplierForm.get('creator')?.patchValue(user);
+        this.supplierForm.get('creator')?.disable();
+      });
       if (params['id']) {
         this.isEditMode = true;
         this.supplierId = +params['id'];
@@ -42,7 +50,11 @@ export class SupplierEditComponent implements OnInit {
       cnpj: ['', Validators.required],
       name: ['', Validators.required],
       status: [SupplierStatus.Inactive, Validators.required],
-      contactEmail: ['', [Validators.required, Validators.email]]
+      contactEmail: ['', [Validators.required, Validators.email]],
+      creator: this.fb.group({
+        id: null,
+        name: ['', Validators.required]
+      }),
     });
   }
 
@@ -50,21 +62,27 @@ export class SupplierEditComponent implements OnInit {
     this.service.findOne(id).subscribe({
       next: (supplier: Supplier) => {
         this.supplierForm.patchValue(supplier);
+
+        this.supplierForm.get('cnpj')?.disable();
+        this.supplierForm.get('contactEmail')?.disable();
       }
     });
   }
 
   public onSubmit() {
     if (this.supplierForm.valid) {
+      const formData = this.supplierForm.getRawValue();
+
       if (!this.isEditMode) {
-        this.supplierForm.get('status')?.setValue(SupplierStatus.Invited);
-        this.service.create(this.supplierForm.value).subscribe(supplier => {
+        formData.status = SupplierStatus.Invited;
+
+        this.service.create(formData).subscribe(supplier => {
           if (supplier) {
             this.router.navigate(['/suppliers']);
           }
         });
       } else {
-        this.service.update(this.supplierForm.value).subscribe(supplier => {
+        this.service.update(formData).subscribe(supplier => {
           if (supplier) {
             this.router.navigate(['/suppliers']);
           }

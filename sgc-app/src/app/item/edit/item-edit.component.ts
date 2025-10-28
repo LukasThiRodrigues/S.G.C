@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { Item } from '../../shared/models/item.model';
 import { ItemService } from '../../services/item.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-item-edit',
@@ -22,13 +23,21 @@ export class ItemEditComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
-    private service: ItemService
+    private service: ItemService,
+    private authService: AuthService,
   ) {
     this.itemForm = this.createForm();
   }
 
   public ngOnInit() {
     this.route.params.subscribe(params => {
+      const user = this.authService.getCurrentUser();
+
+      this.authService.findOne(user.sub).subscribe(user => {
+        this.itemForm.get('creator')?.patchValue(user);
+        this.itemForm.get('creator')?.disable();
+      });
+
       if (params['id']) {
         this.isEditMode = true;
         this.itemId = +params['id'];
@@ -41,6 +50,10 @@ export class ItemEditComponent implements OnInit {
     return this.fb.group({
       id: null,
       item: ['', Validators.required],
+      creator: this.fb.group({
+        id: null,
+        name: ['', Validators.required]
+      }),
       description: null,
       code: ['', Validators.required],
       unit: ['', Validators.required],
@@ -51,6 +64,10 @@ export class ItemEditComponent implements OnInit {
     this.service.findOne(id).subscribe({
       next: (item: Item) => {
         this.itemForm.patchValue(item);
+
+        this.itemForm.get('code')?.disable();
+        this.itemForm.get('unit')?.disable();
+        this.itemForm.get('item')?.disable();
       }
     });
   }
