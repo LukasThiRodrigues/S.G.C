@@ -1,26 +1,23 @@
 <nav class="navbar">
-    <div class="navbar-content">
-      <a class="logo">Sistema de Gestão de Compras</a>
-      
-      <div class="nav-buttons">
-        <button class="nav-button" (click)="requests()" [class.active]="isActive(['/requests', '/request/edit'])">
-          Pedidos
-        </button>
-        <button class="nav-button" (click)="quotations()" [class.active]="isActive(['/quotations', '/quotation/edit'])">
-          Cotações
-        </button>
-        <button class="nav-button" (click)="suppliers()" [class.active]="isActive(['/suppliers', '/supplier/edit'])" *ngIf="!isSupplier">
-          Fornecedores
-        </button>
-        <button class="nav-button" (click)="items()" [class.active]="isActive(['/items', '/item/edit'])" *ngIf="!isSupplier">
-          Itens
-        </button>
-        <button class="nav-button" (click)="profile()" [class.active]="isActive(['/profile'])">
-          Perfil
-        </button>
-        <button class="nav-button" (click)="logout()">
-          Sair
-        </button>
-      </div>
+  <div class="navbar-content">
+    <a class="logo">Sistema de Gestão de Compras</a>
+    
+    <div class="nav-buttons">
+      <button class="nav-button" (click)="requests()" [class.active]="isActive(['/requests', '/request/edit'])">
+        Pedidos
+      </button>
+      <button class="nav-button" (click)="quotations()" [class.active]="isActive(['/quotations', '/quotation/edit'])">
+        Cotações
+      </button>
+      <button class="nav-button" (click)="suppliers()" [class.active]="isActive(['/suppliers', '/supplier/edit'])" *ngIf="!isSupplier">
+        Fornecedores
+      </button>
+      <button class="nav-button" (click)="items()" [class.active]="isActive(['/items', '/item/edit'])" *ngIf="!isSupplier">
+        Itens
+      </button>
+      <button class="nav-button" (click)="logout()">
+        Sair
+      </button>
     </div>
-  </nav>
+  </div>
+</nav>

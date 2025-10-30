@@ -14,9 +14,8 @@ $error-color: #e74c3c;
   align-items: center;
   min-height: 100vh;
   background: linear-gradient(135deg, color.mix(white, $primary-color, 98%) 0%, $white 100%);
-  padding: 20px;
   position: relative;
-  
+
   // Efeito sutil de background
   &::before {
     content: '';
@@ -223,12 +222,6 @@ $error-color: #e74c3c;
         width: 100%;
       }
     }
-  }
-
-  .separator {
-    margin: 0 12px;
-    color: color.mix(white, $text-color, 60%);
-    font-weight: 300;
   }
 }
 

@@ -14,9 +14,8 @@ $error-color: #e74c3c;
   align-items: center;
   min-height: 100vh;
   background: linear-gradient(135deg, color.mix(white, $primary-color, 98%) 0%, $white 100%);
-  padding: 20px;
   position: relative;
-  
+
   // Efeito sutil de background
   &::before {
     content: '';
