@@ -99,8 +99,6 @@ Esta seção apresenta uma descrição detalhada da proposta, incluindo os requi
     - O sistema deve possuir logs para monitoramento e auditoria de ações.
     
     - Utilizará um banco de dados relacional para armazenar informações de fornecedores, cotações, pedidos e usuários.
-   
-    - Garantir a autenticidade e integridade dos documentos assinados.
 
  
 - **Representação dos Requisitos:**
