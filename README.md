@@ -28,7 +28,7 @@ Com a adoção do sistema, espera-se uma significativa redução de custos opera
 
   No mercado atual, diversas plataformas já tentam resolver parte desses problemas, como o SAP Ariba, o TOTVS Protheus, Pipefy, entre outros.
 
-  Essas soluções, apesar de consolidadas, frequentemente apresentam barreiras de entrada como custo elevado, baixa usabilidade e uma interfaçe pouco intuitiva. É nesse contexto que o S.G.C se propõe a atuar: entregar uma solução moderna, acessível e intuitiva para as    empresas, com foco em digitalização, usabilidade e integração de recursos como assinatura digital, que agregam segurança jurídica e eliminam o papel nos processos de aprovação.
+  Essas soluções, apesar de consolidadas, frequentemente apresentam barreiras de entrada como custo elevado, baixa usabilidade e uma interfaçe pouco intuitiva. É nesse contexto que o S.G.C se propõe a atuar: entregar uma solução moderna, acessível e intuitiva para as empresas, com foco em digitalização e usabilidade.
 
 - **Justificativa**: A implantação de uma plataforma de gestão de compras é essencial para empresas que buscam eficiência, controle e transparência nos processos de aquisição. Com ela, é possível eliminar tarefas manuais, centralizar o histórico de compras e tomar decisões baseadas em dados concretos.
 Além de melhorar a governança e o compliance, a automação permite rastreabilidade das etapas, facilita auditorias e garante maior segurança e agilidade nas aprovações. A plataforma também promove relacionamentos mais eficientes com fornecedores, alinhando a empresa às melhores práticas de mercado e preparando-a para um cenário corporativo cada vez mais digital e competitivo.
@@ -42,9 +42,8 @@ Além de melhorar a governança e o compliance, a automação permite rastreabil
 
   - Implementar workflow de aprovações de pedidos e cotações;
  
-  - Reduzir tempo e erros operacionais;
- 
-  - Incluir recursos de assinatura digital.
+  - Reduzir tempo e erros operacionais.
+
 
 ## 2. Descrição do Projeto
 
@@ -83,8 +82,6 @@ Esta seção apresenta uma descrição detalhada da proposta, incluindo os requi
 
     - Deve oferecer relatórios sobre histórico de compras e cotações realizadas.
    
-    - O usuário deve poder realizar a assinatura digital de documentos.
-   
     - O sistema deve informar se o pedido foi recebido, bem como a data.
 
   - Requisitos Não-Funcionais (RNF):
@@ -102,24 +99,24 @@ Esta seção apresenta uma descrição detalhada da proposta, incluindo os requi
     - O sistema deve possuir logs para monitoramento e auditoria de ações.
     
     - Utilizará um banco de dados relacional para armazenar informações de fornecedores, cotações, pedidos e usuários.
-   
-    - Garantir a autenticidade e integridade dos documentos assinados.
 
  
 - **Representação dos Requisitos:**
 
     Comprador:
 
-    ![image](https://github.com/user-attachments/assets/7bff06fa-ec24-4228-889a-ba852c005b7a)
+    <img width="1463" height="183" alt="image" src="https://github.com/user-attachments/assets/e2b15b55-c8c4-4ba1-8a36-207d76b968b9" />
 
 
     Fornecedor:
   
-    ![image](https://github.com/user-attachments/assets/cd7f0317-ae8b-44a1-83ed-bedfd8f5f4a5)
+    <img width="315" height="120" alt="image" src="https://github.com/user-attachments/assets/0b2f4250-5058-4b7c-8b4a-462c76c8fd45" />
+
 
     Visão Geral:
 
-    ![image](https://github.com/user-attachments/assets/985a43ab-b4df-48bd-8a39-a423ee76af1c)
+    <img width="2202" height="235" alt="image" src="https://github.com/user-attachments/assets/978419fb-8920-49e0-a4d0-653dac819d32" />
+
 
 
 - **Modelo Entidade Relacionamento:**
@@ -134,15 +131,15 @@ Esta seção apresenta uma descrição detalhada da proposta, incluindo os requi
 - **Modelo C4**:
     - C1 - Contexto:
       
-      ![image](https://github.com/user-attachments/assets/4df856e4-6bab-457f-935a-18a0406161fd)
+      <img width="1092" height="867" alt="image" src="https://github.com/user-attachments/assets/36e5e53e-33e9-4b88-9623-73e4dfeadd69" />
 
     - C2 - Containers:
       
-      ![image](https://github.com/user-attachments/assets/e20e1697-5678-45ef-ab46-2d628690be8b)
+      <img width="1774" height="737" alt="image" src="https://github.com/user-attachments/assets/ca4c4575-967e-4f56-a97c-6a2dc589dbdf" />
 
     - C3 - Components:
       
-      ![image](https://github.com/user-attachments/assets/8a45ca29-b2c3-4871-bbfb-971d8e20e8e5)
+      <img width="1507" height="854" alt="image" src="https://github.com/user-attachments/assets/fb6e5521-546b-4f62-a5f3-5eb946da88be" />
 
 
 ### 3.3. Stack Tecnológica
@@ -155,11 +152,7 @@ Esta seção apresenta uma descrição detalhada da proposta, incluindo os requi
 
   - TypeORM: ORM para manipulação do banco de dados relacional.
 - **Ferramentas de Desenvolvimento e Gestão de Projeto**:
-  - Figma: Protótipos da interface.
-
   - Git e GitHub: Controle de versão.
-
-  - Jira: Planejamento e acompanhamento das tarefas.
 
   - Postman: Testes de APIs.
 
@@ -173,11 +166,7 @@ Esta seção apresenta uma descrição detalhada da proposta, incluindo os requi
 
 - Validação de Entrada: Uso de validação e sanitização de dados de entrada para evitar injeções de SQL e XSS.
 
-- Monitoramento e Logs: Inclusão de sistema de auditoria e rastreamento de atividades suspeitas.
-
 ## 4. Próximos Passos
-
-- Finalização do protótipo no Figma.
 
 - Implementação inicial do backend com autenticação básica.
 
