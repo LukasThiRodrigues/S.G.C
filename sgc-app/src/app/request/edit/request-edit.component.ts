@@ -105,7 +105,7 @@ export class RequestEditComponent implements OnInit {
       item: ['', Validators.required],
       unit: ['', Validators.required],
       quantity: [1, [Validators.required, Validators.min(1)]],
-      price: [0, [Validators.required, Validators.min(0)]],
+      price: [0, [Validators.required, Validators.min(0.0000001)]],
       total: [0]
     });
   }
@@ -211,9 +211,13 @@ export class RequestEditComponent implements OnInit {
   }
 
   public onSubmit() {
-    if (this.requestForm.valid) {
-      const formData = this.requestForm.getRawValue();
+    let formData = this.requestForm.getRawValue();
 
+    if (!this.isEditMode && !this.isSupplier) {
+      formData.quotation = null;
+    }
+
+    if (this.requestForm.valid) {
       if (!this.isEditMode) {
         formData.status = StatusRequest.Pending;
 
@@ -319,6 +323,6 @@ export class RequestEditComponent implements OnInit {
   }
 
   public canEdit(): boolean {
-    return [StatusRequest.Draft, StatusRequest.Pending].includes(this.requestForm.get('status')?.value);
+    return this.requestForm.get('status')?.value === null || [StatusRequest.Draft, StatusRequest.Pending].includes(this.requestForm.get('status')?.value);
   }
 }

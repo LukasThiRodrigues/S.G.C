@@ -64,6 +64,8 @@ export class QuotationEditComponent implements OnInit {
           this.quotationForm.get('description')?.disable();
           this.isSupplier = true;
           this.supplierId = user.supplierId;
+        } else {
+          this.quotationForm.get('proposals')?.disable();
         }
       });
 
@@ -100,7 +102,7 @@ export class QuotationEditComponent implements OnInit {
       itemId: null,
       unit: ['', Validators.required],
       quantity: [1, [Validators.required, Validators.min(1)]],
-      price: [0, [Validators.required, Validators.min(0)]],
+      price: [0, [Validators.required, Validators.min(0.0000001)]],
       total: [0]
     });
   }
@@ -115,7 +117,7 @@ export class QuotationEditComponent implements OnInit {
   private createProposalForm(): FormGroup {
     return this.fb.group({
       id: null,
-      createdAt: [new Date().toISOString().substring(0, 10), Validators.required],
+      createdAt: new Date().toISOString().substring(0, 10),
       supplier: null,
       itens: this.fb.array([this.createItemForm()]),
       request: null,
@@ -287,9 +289,13 @@ export class QuotationEditComponent implements OnInit {
   }
 
   public onSubmit() {
-    if (this.quotationForm.valid) {
-      const formData = this.quotationForm.getRawValue();
+    let formData = this.quotationForm.getRawValue();
 
+    if (!this.isEditMode && !this.isSupplier) {
+      formData.proposals = null;
+    }
+
+    if (this.quotationForm.valid) {
       if (this.isSupplier) {
         formData.quotationId = this.quotationId;
         formData.supplierId = this.supplierId;

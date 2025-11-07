@@ -117,7 +117,7 @@
         </div>
       </div>
 
-      <div class="itens-section" *ngIf="isEditMode">
+      <div class="itens-section" *ngIf="isEditMode && proposals.controls.length > 0">
         <div class="section-header">
           <h3>{{ isSupplier ? 'Proposta' : 'Propostas'}}</h3>
         </div>
