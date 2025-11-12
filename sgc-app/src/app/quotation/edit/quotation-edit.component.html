@@ -61,7 +61,7 @@
 
             <div class="item-actions">
               <button type="button" class="btn-remove" (click)="removeSupplier(i)"
-                [disabled]="suppliers.length === 1">×</button>
+                [disabled]="suppliers.length === 1 || proposals.controls.length > 0 || isSupplier">×</button>
             </div>
           </div>
         </div>
@@ -111,7 +111,7 @@
 
             <div class="item-actions">
               <button type="button" class="btn-remove" (click)="removeItem(i)"
-                [disabled]="itens.length === 1">×</button>
+                [disabled]="itens.length === 1 || proposals.controls.length > 0 || isSupplier">×</button>
             </div>
           </div>
         </div>
@@ -129,8 +129,8 @@
                 {{ proposal.get('supplier')?.value?.name }} -
                 {{ proposal.get('supplier')?.value?.cnpj }}
               </p>
-              <button type="button" class="btn-add" (click)="generateRequest(p)" *ngIf="!hasRequest(p)">Gerar Pedido</button>
-              <p *ngIf="hasRequest(p)">
+              <button type="button" class="btn-add" (click)="generateRequest(p)" *ngIf="!hasRequest() && !isSupplier">Gerar Pedido</button>
+              <p *ngIf="proposalHasRequest(p)">
                 Código do Pedido Gerado: {{ proposal.get('request')?.value?.code }}
               </p>
             </div>

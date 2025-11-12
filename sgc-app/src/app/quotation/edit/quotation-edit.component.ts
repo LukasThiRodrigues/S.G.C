@@ -15,6 +15,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ProposalService } from '../../services/proposal.service';
 import { StatusRequest } from '../../shared/models/request.model';
 import { RequestService } from '../../services/request.service';
+import { Proposal } from '../../shared/models/proposal.model';
 
 @Component({
   selector: 'app-quotation-edit',
@@ -302,20 +303,23 @@ export class QuotationEditComponent implements OnInit {
 
         this.proposalService.create(formData).subscribe(proposal => {
           if (proposal) {
+            formData.proposals.push(proposal);
+
+            if (formData.proposals.length >= 2) {
+              const quotation = this.quotationForm.getRawValue();
+              quotation.id = this.quotationId;
+              quotation.status = StatusQuotation.InDecision;
+
+              this.quotationService.update(quotation).subscribe(quotation => {
+                if (quotation) {
+                  this.router.navigate(['/quotations']);
+                }
+              });
+            }
+
             this.router.navigate(['/quotations']);
           }
         });
-
-        if (formData.suppliers.length === formData.proposals.length) {
-          formData.id = this.quotationId;
-          formData.status = StatusQuotation.InDecision;
-
-          this.quotationService.update(formData).subscribe(quotation => {
-            if (quotation) {
-              this.router.navigate(['/quotations']);
-            }
-          });
-        }
       } else {
         if (!this.isEditMode) {
           formData.status = StatusQuotation.Pending;
@@ -415,13 +419,25 @@ export class QuotationEditComponent implements OnInit {
 
       this.requestService.create(requestForm).subscribe(request => {
         if (request) {
-          this.router.navigate(['/request/edit/', request.id]);
+          const quotation = this.quotationForm.getRawValue();
+          quotation.id = this.quotationId;
+          quotation.status = StatusQuotation.GeneratedRequest;
+
+          this.quotationService.update(quotation).subscribe(quotation => {
+            if (quotation) {
+              this.router.navigate(['/request/edit/', request.id]);
+            }
+          });
         }
       });
     });
   }
 
-  public hasRequest(index: number): boolean {
+  public hasRequest(): boolean {
+    return this.proposals.value.some((proposal: Proposal) => !!proposal.request?.id);
+  }
+
+  public proposalHasRequest(index: number): boolean {
     const proposal = this.proposals.at(index).value;
 
     return proposal.request?.id ? true : false;
@@ -434,7 +450,7 @@ export class QuotationEditComponent implements OnInit {
       return false;
     }
 
-    return proposals.some((proposal: any) => proposal.supplier?.id === this.supplierId);
+    return proposals.some((proposal: Proposal) => proposal.supplier?.id === this.supplierId);
   }
 
 }
