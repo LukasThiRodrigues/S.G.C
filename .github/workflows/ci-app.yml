@@ -1,4 +1,4 @@
-name: CI
+name: CI-APP
 
 on:
   push:
@@ -25,8 +25,8 @@ jobs:
         run: npm install
         working-directory: ./sgc-app
 
-      - name: Rodar testes com cobertura
-        run: npm test -- --coverage
+      - name: Rodar testes
+        run: npm test
         working-directory: ./sgc-app
 
       - name: SonarCloud Scan
