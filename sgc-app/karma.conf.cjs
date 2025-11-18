@@ -4,29 +4,47 @@ module.exports = function (config) {
         frameworks: ['jasmine'],
         plugins: [
             require('karma-jasmine'),
+            require('karma-chrome-launcher'),
             require('karma-jasmine-html-reporter'),
-            require('karma-coverage'),
-            require('karma-jsdom-launcher')
+            require('karma-coverage')
         ],
 
         client: {
-            clearContext: false,
+            jasmine: {},
+            clearContext: false
         },
 
-        reporters: ['progress', 'kjhtml', 'coverage'],
+        jasmineHtmlReporter: {
+            suppressAll: true
+        },
+
+        browsers: ['ChromeHeadlessCI'],
+
+        customLaunchers: {
+            ChromeHeadlessCI: {
+                base: 'ChromeHeadless',
+                flags: [
+                    '--no-sandbox',
+                    '--disable-gpu',
+                    '--disable-dev-shm-usage',
+                    '--disable-setuid-sandbox',
+                    '--no-zygote'
+                ]
+            }
+        },
+
+        reporters: ['progress', 'kjhtml'],
 
         coverageReporter: {
-            dir: require('path').join(__dirname, './coverage'),
+            dir: require('path').join(__dirname, './coverage/'),
             subdir: '.',
             reporters: [
                 { type: 'html' },
-                { type: 'lcov' },
                 { type: 'text-summary' }
             ]
         },
 
-        browsers: ['jsdom'],
-
         singleRun: true,
+        restartOnFileChange: false
     });
 };
