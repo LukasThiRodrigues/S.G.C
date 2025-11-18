@@ -44,10 +44,6 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['/items']);
   }
 
-  public profile() {
-    this.router.navigate(['/profile']);
-  }
-
   public logout() {
     this.router.navigate(['/login']);
   }
