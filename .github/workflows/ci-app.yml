@@ -25,11 +25,8 @@ jobs:
         run: npm install
         working-directory: ./sgc-app
 
-      - name: Instalar Chrome
-        uses: browser-actions/setup-chrome@v1
-
-      - name: Rodar testes
-        run: npm test -- --watch=false
+      - name: Rodar testes com jsdom
+        run: npm test -- --watch=false --browsers=jsdom
         working-directory: ./sgc-app
 
       - name: SonarCloud Scan

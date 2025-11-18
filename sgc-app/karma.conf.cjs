@@ -4,9 +4,9 @@ module.exports = function (config) {
         frameworks: ['jasmine'],
         plugins: [
             require('karma-jasmine'),
-            require('karma-chrome-launcher'),
+            require('karma-jasmine-html-reporter'),
             require('karma-coverage'),
-            require('karma-jasmine-html-reporter')
+            require('karma-jsdom-launcher')
         ],
 
         client: {
@@ -25,20 +25,7 @@ module.exports = function (config) {
             ]
         },
 
-        browsers: ['ChromeCI'],
-
-        customLaunchers: {
-            ChromeCI: {
-                base: 'Chromium',
-                flags: [
-                    '--headless=new',
-                    '--no-sandbox',
-                    '--disable-gpu',
-                    '--disable-dev-shm-usage',
-                    '--disable-setuid-sandbox',
-                ],
-            },
-        },
+        browsers: ['jsdom'],
 
         singleRun: true,
     });
