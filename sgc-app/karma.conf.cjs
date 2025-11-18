@@ -29,8 +29,9 @@ module.exports = function (config) {
 
         customLaunchers: {
             ChromeCI: {
-                base: 'ChromeHeadless',
+                base: 'Chromium',
                 flags: [
+                    '--headless=new',
                     '--no-sandbox',
                     '--disable-gpu',
                     '--disable-dev-shm-usage',
