@@ -22,15 +22,18 @@ module.exports = function (config) {
                 { type: 'text-summary' }
             ]
         },
-        browsers: ['ChromeHeadlessCI'],
+        browsers: ['ChromeCI'],
         customLaunchers: {
-            ChromeHeadlessCI: {
-                base: 'ChromeHeadless',
+            ChromeCI: {
+                base: 'Chrome',
                 flags: [
+                    '--headless=new',
                     '--no-sandbox',
                     '--disable-gpu',
                     '--disable-dev-shm-usage',
-                    '--disable-setuid-sandbox'
+                    '--disable-setuid-sandbox',
+                    '--disable-software-rasterizer',
+                    '--mute-audio'
                 ]
             }
         },
