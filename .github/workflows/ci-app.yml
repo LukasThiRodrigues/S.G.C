@@ -30,16 +30,28 @@ jobs:
         run: npm install
         working-directory: ./sgc-app
 
-      - name: Rodar testes
-        run: npm test -- --watch=false --browsers=ChromeHeadlessCI --code-coverage
+      - name: Rodar testes com coverage
+        run: npx ng test --no-watch --code-coverage --browsers=ChromeHeadlessCI
         working-directory: ./sgc-app
+
+      - name: Verificar coverage gerado
+        run: |
+          Get-ChildItem coverage -Recurse -ErrorAction SilentlyContinue
+          if (Test-Path "coverage\lcov.info") {
+            Write-Host "✅ lcov.info encontrado!"
+            Get-Content coverage\lcov.info | Select-Object -First 5
+          } else {
+            Write-Host "❌ lcov.info NÃO encontrado"
+            Write-Host "Arquivos na pasta coverage:"
+            Get-ChildItem coverage -Recurse
+          }
+        working-directory: ./sgc-app
+        shell: pwsh
 
       - name: SonarCloud Scan
         run: |
           npm install -D sonar-scanner
-          npx sonar-scanner \
-            -Dsonar.token=$SONAR_TOKEN \
-            -Dsonar.analysis.automaticDisable=true
+          npx sonar-scanner -Dsonar.token=$env:SONAR_TOKEN
         working-directory: ./sgc-app
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

@@ -31,10 +31,17 @@ module.exports = function (config) {
         },
 
         coverageReporter: {
-            type: 'lcov',
-            dir: 'coverage/',
-            subdir: '.'
+            reporters: [
+                { type: 'lcov', subdir: '.' },
+                { type: 'text-summary', subdir: '.' }
+            ]
         },
+
+        files: [
+            'src/**/*.ts',
+            'src/**/*.html',
+            'src/**/*.css'
+        ],
 
         singleRun: true,
         restartOnFileChange: false

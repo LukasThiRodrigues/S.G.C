@@ -78,7 +78,7 @@
           "builder": "@angular/build:extract-i18n"
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "karmaConfig": "karma.conf.cjs",
             "codeCoverage": true,
@@ -86,7 +86,9 @@
               "src/test.ts",
               "src/polyfills.ts",
               "src/**/*.spec.ts",
-              "src/**/*.mock.ts"
+              "src/**/*.mock.ts",
+              "src/main.ts",
+              "src/environments/*"
             ],
             "polyfills": [
               "zone.js",
