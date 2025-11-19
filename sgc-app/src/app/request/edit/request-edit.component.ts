@@ -13,6 +13,7 @@ import { RequestService } from '../../services/request.service';
 import { AuthService } from '../../services/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { RejectReasonDialogComponent } from '../../shared/components/reason/reason.component';
+import { MonitoringService } from '../../services/monitoring.service';
 
 @Component({
   selector: 'app-request-edit',
@@ -44,12 +45,15 @@ export class RequestEditComponent implements OnInit {
     private itemService: ItemService,
     private authService: AuthService,
     private dialog: MatDialog,
+    private monitoring: MonitoringService,
   ) {
     this.requestForm = this.createForm();
     this.supplierControl = new FormControl<Supplier | null>(null, Validators.required);
   }
 
   public ngOnInit() {
+    this.monitoring.logInfo('RequestEditComponent initialized');
+
     this.route.params.subscribe(params => {
       const user = this.authService.getCurrentUser();
 
