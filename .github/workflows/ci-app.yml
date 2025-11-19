@@ -56,6 +56,20 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
 
+      - name: Debug - Listar projetos
+        run: |
+          echo "=== Listando todos os projetos da organização ==="
+          curl -s -H "Authorization: Bearer $SONAR_TOKEN" \
+            "https://sonarcloud.io/api/projects/search?organization=$SONAR_ORGANIZATION" | \
+            jq '.components[] | "Key: \(.key) | Name: \(.name)"'
+          
+          echo "=== Project Key atual ==="
+          echo "SONAR_PROJECT_KEY: $SONAR_PROJECT_KEY"
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+
       - name: SonarCloud Scan
         run: |
           sonar-scanner \
