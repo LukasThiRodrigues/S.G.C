@@ -34,12 +34,22 @@ jobs:
         run: npm test -- --watch=false --browsers=ChromeHeadlessCI
         working-directory: ./sgc-app
 
+      - name: Debug - Verificar secrets
+        run: |
+          echo "SONAR_ORGANIZATION length: ${#SONAR_ORGANIZATION}"
+          echo "SONAR_PROJECT_KEY length: ${#SONAR_PROJECT_KEY}"
+          echo "SONAR_TOKEN defined: ${{ secrets.SONAR_TOKEN != '' && 'YES' || 'NO' }}"
+        env:
+          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         with:
           projectBaseDir: ./sgc-app
+          args: >
+            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
+            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+            -Dsonar.token=${{ secrets.SONAR_TOKEN }}
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
-          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
