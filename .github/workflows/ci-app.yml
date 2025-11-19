@@ -56,19 +56,30 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
 
-      - name: Debug - Listar projetos
+      - name: Debug - Verificar resposta da API
         run: |
-          echo "=== Listando todos os projetos da organização ==="
-          curl -s -H "Authorization: Bearer $SONAR_TOKEN" \
-            "https://sonarcloud.io/api/projects/search?organization=$SONAR_ORGANIZATION" | \
-            jq '.components[] | "Key: \(.key) | Name: \(.name)"'
+          echo "=== Testando conexão com SonarCloud API ==="
           
-          echo "=== Project Key atual ==="
-          echo "SONAR_PROJECT_KEY: $SONAR_PROJECT_KEY"
+          # Primeiro veja a resposta bruta
+          response=$(curl -s -H "Authorization: Bearer $SONAR_TOKEN" \
+            "https://sonarcloud.io/api/projects/search?organization=$SONAR_ORGANIZATION")
+          
+          echo "Resposta bruta:"
+          echo "$response"
+          echo "=== Fim da resposta bruta ==="
+          
+          # Teste a autenticação
+          echo "=== Testando autenticação ==="
+          curl -s -H "Authorization: Bearer $SONAR_TOKEN" \
+            "https://sonarcloud.io/api/authentication/validate" | jq .
+            
+          # Teste permissões de usuário
+          echo "=== Testando permissões de usuário ==="
+          curl -s -H "Authorization: Bearer $SONAR_TOKEN" \
+            "https://sonarcloud.io/api/users/current" | jq .
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
-          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}NAR_PROJECT_KEY }}
 
       - name: SonarCloud Scan
         run: |
