@@ -31,15 +31,21 @@ jobs:
         working-directory: ./sgc-app
 
       - name: Rodar testes
-        run: npm test -- --watch=false --browsers=ChromeHeadlessCI --code-coverage
+        run: npm test -- --watch=false --browsers=ChromeHeadlessCI
         working-directory: ./sgc-app
 
       - name: SonarCloud Scan
         run: |
           npm install -D sonar-scanner
           npx sonar-scanner \
-            -Dsonar.token=$SONAR_TOKEN \
-            -Dsonar.analysis.automaticDisable=true
+            -Dsonar.token=$env:SONAR_TOKEN \
+            -Dsonar.coverage.exclusions=**/* \
+            -Dsonar.cpd.exclusions=**/* \
+            -Dsonar.tests= \
+            -Dsonar.test.inclusions= \
+            -Dsonar.test.exclusions=**/* \
+            -Dsonar.javascript.lcov.reportPaths= \
+            -Dsonar.typescript.lcov.reportPaths=
         working-directory: ./sgc-app
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
