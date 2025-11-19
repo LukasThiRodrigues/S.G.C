@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:sgc-app": "node dist/sgc-app/server/server.mjs"
+    "serve:ssr:sgc-app": "node dist/sgc-app/server/server.mjs",
+    "lint": "ng lint"
   },
   "prettier": {
     "printWidth": 100,
@@ -47,6 +48,8 @@
     "@types/jasmine": "~5.1.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^20.17.19",
+    "angular-eslint": "20.6.0",
+    "eslint": "^9.39.0",
     "jasmine-core": "~5.8.0",
     "jsdom": "^27.2.0",
     "karma": "~6.4.0",
@@ -55,6 +58,7 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "karma-jsdom-launcher": "^19.0.0",
-    "typescript": "~5.8.2"
+    "typescript": "~5.8.2",
+    "typescript-eslint": "8.46.3"
   }
 }
