@@ -14,10 +14,6 @@ module.exports = function (config) {
             clearContext: false
         },
 
-        jasmineHtmlReporter: {
-            suppressAll: true
-        },
-
         browsers: ['ChromeHeadlessCI'],
 
         customLaunchers: {
@@ -34,16 +30,6 @@ module.exports = function (config) {
         },
 
         reporters: ['progress', 'kjhtml'],
-
-        coverageReporter: {
-            dir: require('path').join(__dirname, './coverage/'),
-            subdir: '.',
-            reporters: [
-                { type: 'html' },
-                { type: 'text-summary' }
-            ]
-        },
-
         singleRun: true,
         restartOnFileChange: false
     });
