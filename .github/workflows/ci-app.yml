@@ -38,6 +38,16 @@ jobs:
         run: npm install -g sonar-scanner
         working-directory: ./sgc-app
 
+      - name: Debug - Verificar valores SonarCloud
+        run: |
+          echo "SONAR_ORGANIZATION: $SONAR_ORGANIZATION"
+          echo "SONAR_PROJECT_KEY: $SONAR_PROJECT_KEY"
+          echo "SONAR_TOKEN: ${SONAR_TOKEN:0:10}..." # Mostra só os primeiros 10 chars por segurança
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+
       - name: SonarCloud Scan
         run: |
           sonar-scanner \
