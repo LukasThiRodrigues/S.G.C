@@ -37,7 +37,9 @@ jobs:
       - name: SonarCloud Scan
         run: |
           npm install -D sonar-scanner
-          npx sonar-scanner -Dsonar.token=$env:SONAR_TOKEN
+          npx sonar-scanner \
+            -Dsonar.token=$SONAR_TOKEN \
+            -Dsonar.analysis.automaticDisable=true
         working-directory: ./sgc-app
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
