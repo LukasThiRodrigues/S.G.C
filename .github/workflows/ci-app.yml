@@ -34,69 +34,11 @@ jobs:
         run: npm test -- --watch=false --browsers=ChromeHeadlessCI
         working-directory: ./sgc-app
 
-      - name: Instalar sonar-scanner
-        run: npm install -g sonar-scanner
-        working-directory: ./sgc-app
-
-      - name: Debug - Verificar valores SonarCloud
-        run: |
-          echo "SONAR_ORGANIZATION: $SONAR_ORGANIZATION"
-          echo "SONAR_PROJECT_KEY: $SONAR_PROJECT_KEY"
-          echo "SONAR_TOKEN: ${SONAR_TOKEN:0:10}..." # Mostra só os primeiros 10 chars por segurança
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
-          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
-
-      - name: Testar conexão com SonarCloud
-        run: |
-          curl -s -H "Authorization: Bearer $SONAR_TOKEN" \
-          "https://sonarcloud.io/api/organizations/search?organizations=$SONAR_ORGANIZATION" | jq .
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
-
-      - name: Debug - Verificar resposta da API
-        run: |
-          echo "=== Testando conexão com SonarCloud API ==="
-          
-          # Primeiro veja a resposta bruta
-          response=$(curl -s -H "Authorization: Bearer $SONAR_TOKEN" \
-            "https://sonarcloud.io/api/projects/search?organization=$SONAR_ORGANIZATION")
-          
-          echo "Resposta bruta:"
-          echo "$response"
-          echo "=== Fim da resposta bruta ==="
-          
-          # Teste a autenticação
-          echo "=== Testando autenticação ==="
-          curl -s -H "Authorization: Bearer $SONAR_TOKEN" \
-            "https://sonarcloud.io/api/authentication/validate" | jq .
-            
-          # Teste permissões de usuário
-          echo "=== Testando permissões de usuário ==="
-          curl -s -H "Authorization: Bearer $SONAR_TOKEN" \
-            "https://sonarcloud.io/api/users/current" | jq .
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}NAR_PROJECT_KEY }}
-
       - name: SonarCloud Scan
         run: |
-          sonar-scanner \
-            -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.organization=$SONAR_ORGANIZATION \
-            -Dsonar.projectKey=$SONAR_PROJECT_KEY \
-            -Dsonar.token=$SONAR_TOKEN \
-            -Dsonar.sources=src \
-            -Dsonar.tests=src \
-            -Dsonar.test.inclusions=**/*.spec.ts \
-            -Dsonar.exclusions=**/node_modules/** \
-            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
-            -Dsonar.sourceEncoding=UTF-8
+          npm install -D sonar-scanner
+          npx sonar-scanner -Dsonar.token=$SONAR_TOKEN
         working-directory: ./sgc-app
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
-          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
