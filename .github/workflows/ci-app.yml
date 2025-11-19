@@ -48,6 +48,14 @@ jobs:
           SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
           SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
 
+      - name: Testar conexão com SonarCloud
+        run: |
+          curl -s -H "Authorization: Bearer $SONAR_TOKEN" \
+          "https://sonarcloud.io/api/organizations/search?organizations=$SONAR_ORGANIZATION" | jq .
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
+
       - name: SonarCloud Scan
         run: |
           sonar-scanner \
