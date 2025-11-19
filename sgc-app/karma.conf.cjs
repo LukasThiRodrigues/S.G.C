@@ -9,11 +9,6 @@ module.exports = function (config) {
             require('karma-coverage')
         ],
 
-        client: {
-            jasmine: {},
-            clearContext: false
-        },
-
         browsers: ['ChromeHeadlessCI'],
 
         customLaunchers: {
@@ -29,7 +24,18 @@ module.exports = function (config) {
             }
         },
 
-        reporters: ['progress', 'kjhtml'],
+        reporters: ['progress', 'kjhtml', 'coverage'],
+
+        preprocessors: {
+            'src/**/*.ts': ['coverage']
+        },
+
+        coverageReporter: {
+            type: 'lcov',
+            dir: 'coverage/',
+            subdir: '.'
+        },
+
         singleRun: true,
         restartOnFileChange: false
     });

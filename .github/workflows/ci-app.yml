@@ -31,7 +31,7 @@ jobs:
         working-directory: ./sgc-app
 
       - name: Rodar testes
-        run: npm test -- --watch=false --browsers=ChromeHeadlessCI
+        run: npm test -- --watch=false --browsers=ChromeHeadlessCI --code-coverage
         working-directory: ./sgc-app
 
       - name: SonarCloud Scan
