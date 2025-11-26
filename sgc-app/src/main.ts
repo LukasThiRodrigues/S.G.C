@@ -2,7 +2,7 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
 import { MonitoringService } from './app/services/monitoring.service';
 import { App } from './app/app';
-import { environment } from './environments/environment.prod';
+import { environment } from './environments/environment';
 import * as Sentry from "@sentry/angular";
 
 Sentry.init({
