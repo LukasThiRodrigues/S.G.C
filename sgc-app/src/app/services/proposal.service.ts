@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { Proposal } from '../shared/models/proposal.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ProposalService {
-    private apiUrl = 'http://localhost:3000';
+    private apiUrl = environment.apiUrl;
 
     constructor(
         private http: HttpClient,
